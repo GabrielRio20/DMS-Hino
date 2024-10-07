@@ -1,0 +1,20 @@
+﻿<div class="col-md-3 col-lg-2 bg-light sidebar py-3 position-fixed" style="border-right: 1px solid #ddd;">
+    <ul class="nav flex-column">
+
+        <li class="nav-item">
+            <button class="nav-link btn btn-light text-start w-100 mb-2" onclick="loadContent('PublicDocuments')">Public Documents</button>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Dashboard", "Admin")" onclick="showContent('dashboard-admin')">Home</a>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link btn btn-light text-start w-100 mb-2" onclick="showContent('my-documents')">My Documents</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link btn btn-light text-start w-100 mb-2" onclick="showContent('shared-with-me')">Shared with Me</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link btn btn-light text-start w-100 mb-2" onclick="showContent('trash')">Trash</button>
+        </li>
+    </ul>
+</div>

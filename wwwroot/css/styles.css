@@ -1,0 +1,159 @@
+﻿/* General Styling */
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e9ecef;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #f8f9fa;
+    border-right: 1px solid #e9ecef;
+}
+
+.nav-link {
+    color: #495057;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    background-color: #e9ecef;
+    color: #007bff;
+}
+
+/* Search Bar */
+.search-bar {
+    width: 60%;
+    border-radius: 30px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+/* Main Content */
+.main-content {
+    overflow-y: auto;
+    height: 100vh;
+}
+
+/* Grid and List View Button */
+.btn-outline-primary, .btn-outline-secondary {
+}
+
+/* Grid View Configuration */
+
+#file-container .card-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px; 
+}
+
+#file-container .file-icon {
+    width: 50px;
+    height: 50px; 
+}
+
+#file-container .file-name {
+    margin-top: 5px; 
+    font-size: 14px; 
+    text-align: center;
+}
+
+
+/* List View Configuration */
+#file-container.list-view .small-item {
+    width: 100%;  
+    height: auto; 
+    margin-bottom: 0.5rem;
+}
+
+#file-container.list-view .card-body {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding-left: 10px;
+}
+
+/* List View */
+/* List View */
+.list-view .col {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.list-view .card {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.list-view .file-icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px; /* Kurangi margin untuk lebih merapatkan elemen */
+}
+
+.list-view .card-body {
+    padding: 0; /* Hapus padding internal di dalam card-body */
+}
+
+.list-view .file-name {
+    margin-left: 10px;
+    font-size: 16px;
+    margin-top: 0;
+    text-align: left;
+    line-height: 1.2; /* Atur line-height lebih kecil untuk mengecilkan jarak antar teks */
+}
+
+.list-view p.file-name {
+    display: none;
+}
+
+.list-view .card-body:after {
+    content: attr(data-file-name);
+    font-size: 16px;
+    margin-left: 15px;
+    color: black;
+    line-height: 1.2; /* Atur line-height untuk lebih rapat */
+}
+
+.sidebar-right {
+    position: fixed; /* Stick it to the right of the viewport */
+    top: 56px; /* Navbar height, adjust if needed */
+    right: 0;
+    width: 250px; /* Adjust width as necessary */
+    height: calc(100vh - 56px); /* Ensure it takes up the remaining viewport height */
+    background-color: #f8f9fa;
+    border-left: 1px solid #ddd;
+    overflow-y: auto; /* Add scrolling if content overflows */
+    padding: 15px;
+}
+
+
+    .sidebar-right.open {
+        right: 0;
+    }
+
+.main-content.with-sidebar {
+    margin-right: 250px; /* Adjust for smaller sidebar */
+}
+
+.sidebar-right h4,
+.sidebar-right p {
+    font-size: 0.9rem;
+}
+
+.sidebar-right .file-info {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
