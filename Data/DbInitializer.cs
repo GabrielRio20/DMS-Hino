@@ -55,6 +55,66 @@ namespace DMS_Hino.Data
                     context.Users.Add(adminUser);
                     await context.SaveChangesAsync();
                 }
+
+                await SeedDocuments(context);
+            }
+        }
+
+        private static async Task SeedDocuments(DatabaseContext context)
+        {
+            // Check if any documents exist
+            if (!context.Documents.Any())
+            {
+                var documents = new List<Document>
+            {
+                new Document
+                {
+                    Id = "doc1",
+                    DocumentItem = "Legal Agreement",
+                    Number = "LA-2024-01",
+                    Name = "Service Agreement",
+                    VersionName = "v1.0",
+                    ReleasedDate = new DateTime(2024, 1, 15),
+                    Tag = "Contract",
+                    Location = "Locker A-1",
+                    IsPublic = true,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedById = "admin" // Ganti sesuai dengan ID pengguna yang valid
+                },
+                new Document
+                {
+                    Id = "doc2",
+                    DocumentItem = "Project Plan",
+                    Number = "PP-2024-02",
+                    Name = "2024 Project Plan",
+                    VersionName = "v1.0",
+                    ReleasedDate = new DateTime(2024, 2, 10),
+                    Tag = "Planning",
+                    Location = "Locker A-2",
+                    IsPublic = true,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedById = "admin" // Ganti sesuai dengan ID pengguna yang valid
+                },
+                // Tambahkan lebih banyak dokumen di sini
+                new Document
+                {
+                    Id = "doc3",
+                    DocumentItem = "Financial Report",
+                    Number = "FR-2024-03",
+                    Name = "Q1 Financial Report",
+                    VersionName = "v1.0",
+                    ReleasedDate = new DateTime(2024, 3, 20),
+                    Tag = "Finance",
+                    Location = "Locker A-3",
+                    IsPublic = true,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedById = "admin" // Ganti sesuai dengan ID pengguna yang valid
+                },
+                // Lanjutkan dengan lebih banyak dokumen...
+            };
+
+                await context.Documents.AddRangeAsync(documents);
+                await context.SaveChangesAsync(); // Pastikan untuk menyimpan perubahan
             }
         }
     }

@@ -1,0 +1,53 @@
+﻿@model DMS_Hino.Models.Division
+
+@{
+    ViewData["Title"] = "Add Division Page";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Document Management System</title>
+</head>
+<body>
+
+    <!-- Include Header -->
+    @Html.Partial("_HeaderLayout")
+
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3">
+                @Html.Partial("_SidebarLayout")
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="col-md-9">
+                <main class="content" style="padding-top: 80px; padding-left: 15px; padding-right: 15px;">
+                    <h2>@ViewData["Title"]</h2>
+
+                    <form asp-action="AddDivision" method="post">
+                        <div class="form-group">
+                            <label asp-for="Name"></label>
+                            <input asp-for="Name" class="form-control" required />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Add Division</button>
+                        </div>
+                    </form>
+
+                    @section Scripts {
+                        @{
+                            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+                        }
+                    }
+                </main>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

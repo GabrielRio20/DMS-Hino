@@ -8,6 +8,9 @@ namespace DMS_Hino.Models
         public string Id { get; set; }
         public string Name { get; set; }
 
+        // One division can have many departments
+        public ICollection<Department> Departments { get; set; }
+
         // Navigation property to Users
         public ICollection<User> Users { get; set; }
     }

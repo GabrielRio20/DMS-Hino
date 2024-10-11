@@ -17,7 +17,7 @@ namespace DMS_Hino.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("AllUsersView", "Admin");
         }
 
         public IActionResult Privacy()
@@ -29,6 +29,18 @@ namespace DMS_Hino.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult About()
+        {
+            ViewData["Title"] = "About";
+            return View();
+        }
+
+        public IActionResult Contact()
+        {
+            ViewData["Title"] = "Contact";
+            return View();
         }
     }
 }

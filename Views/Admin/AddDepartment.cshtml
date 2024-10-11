@@ -1,0 +1,40 @@
+﻿@model DMS_Hino.ViewModel.DepartmentViewModel
+
+@{
+    ViewData["Title"] = "Add Division Page";
+}
+
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="AddDepartment" method="post">
+    <div class="form-group">
+        <label asp-for="Department.Name"></label>
+        <input asp-for="Department.Name" class="form-control" required />
+        <span asp-validation-for="Department.Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Department.DivisionId"></label>
+        <select asp-for="Department.DivisionId" class="form-control" required>
+            <option value="">Select Division</option>
+            @foreach (var division in Model.Divisions)
+            {
+                <option value="@division.Id">@division.Name</option>
+            }
+        </select>
+        <span asp-validation-for="Department.DivisionId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Add Department</button>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+                
+

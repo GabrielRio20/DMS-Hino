@@ -1,0 +1,52 @@
+﻿@model DMS_Hino.ViewModel.DivisionDepartmentViewModel
+
+@{
+    ViewData["Title"] = "All Divisions and Departments";
+}
+
+
+<h2>@ViewData["Title"]</h2>
+
+<!-- Tabel untuk Divisions -->
+<h3>Divisions</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var division in Model.Divisions)
+        {
+            <tr>
+                <td>@division.Id</td>
+                <td>@division.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Tabel untuk Departments -->
+<h3>Departments</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Division</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var department in Model.Departments)
+        {
+            <tr>
+                <td>@department.Id</td>
+                <td>@department.Name</td>
+                <td>@department.Division.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+          
+

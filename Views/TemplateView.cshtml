@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Document Management System</title>
+</head>
+<body>
+
+    <!-- Include Header -->
+    @Html.Partial("_HeaderLayout")
+
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3">
+                @Html.Partial("_SidebarLayout")
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="col-md-9">
+                <main class="content" style="padding-top: 80px; padding-left: 15px; padding-right: 15px;">
+                    <h2>tes</h2>
+                </main>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,94 @@
+﻿@model DMS_Hino.ViewModel.UserViewModel
+
+<h2>User Details</h2>
+
+<div class="d-flex justify-content-between mb-3">
+    <h4>Details for @Model.Username</h4>
+
+    <!-- Buttons to Edit, Save, and Cancel -->
+    <div>
+        <button id="editButton" class="btn btn-primary" onclick="toggleEdit()">Edit</button>
+        <button id="saveButton" class="btn btn-success d-none" type="submit" form="userForm">Save</button>
+        <button id="cancelButton" class="btn btn-secondary d-none" type="button" onclick="cancelEdit()">Cancel</button>
+    </div>
+</div>
+
+<form asp-action="SaveUser" method="post" id="userForm">
+    <!-- Hidden field for the User Id -->
+    <input type="hidden" asp-for="Id" />
+
+    <!-- Username (display as plain text initially, editable in edit mode) -->
+    <div class="form-group">
+        <label>Username:</label>
+        <p id="usernameDisplay">@Model.Username</p>
+        <input asp-for="Username" class="form-control d-none" id="usernameInput" />
+    </div>
+
+    <!-- Password (display as plain text, editable as text field in edit mode) -->
+    <div class="form-group">
+        <label>Password:</label>
+        <p id="passwordDisplay">******</p>
+        <input asp-for="Password" type="password" class="form-control d-none" id="passwordInput" />
+    </div>
+
+    <!-- Role (display as plain text initially, dropdown in edit mode) -->
+    <div class="form-group">
+        <label>Role:</label>
+        <p id="roleDisplay">@Model.Role</p>
+        <select asp-for="Role" class="form-control d-none" id="roleDropdown">
+            <option value="User">User</option>
+            <option value="Admin">Admin</option>
+        </select>
+    </div>
+
+    <!-- Dropdown for Division -->
+    <div class="form-group">
+        <label>Division:</label>
+        <p id="divisionDisplay">@Model.Division?.Name</p>
+        <select asp-for="DivisionId" asp-items="@(new SelectList(Model.Divisions, "Id", "Name", Model.DivisionId))" class="form-control d-none" id="divisionDropdown">
+            <option value="">Select Division</option>
+        </select>
+    </div>
+
+    <!-- Dropdown for Department -->
+    <div class="form-group">
+        <label>Department:</label>
+        <p id="departmentDisplay">@Model.Department?.Name</p>
+        <select asp-for="DepartmentId" asp-items="@(new SelectList(Model.Departments, "Id", "Name", Model.DepartmentId))" class="form-control d-none" id="departmentDropdown">
+            <option value="">Select Department</option>
+        </select>
+    </div>
+
+</form>
+
+<script>
+    function toggleEdit() {
+        // Hide display elements and show input fields
+        document.getElementById("usernameDisplay").classList.add("d-none");
+        document.getElementById("usernameInput").classList.remove("d-none");
+
+        document.getElementById("passwordDisplay").classList.add("d-none");
+        document.getElementById("passwordInput").classList.remove("d-none");
+
+        document.getElementById("roleDisplay").classList.add("d-none");
+        document.getElementById("roleDropdown").classList.remove("d-none");
+
+        document.getElementById("divisionDisplay").classList.add("d-none");
+        document.getElementById("divisionDropdown").classList.remove("d-none");
+
+        document.getElementById("departmentDisplay").classList.add("d-none");
+        document.getElementById("departmentDropdown").classList.remove("d-none");
+
+        // Show Save and Cancel buttons, hide Edit button
+        document.getElementById("editButton").classList.add("d-none");
+        document.getElementById("saveButton").classList.remove("d-none");
+        document.getElementById("cancelButton").classList.remove("d-none");
+    }
+
+    function cancelEdit() {
+        // Reload the page to reset everything
+        location.reload();
+    }
+</script>
+
+

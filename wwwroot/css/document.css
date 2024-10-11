@@ -1,0 +1,42 @@
+﻿/* Styles for the document explorer */
+#documentContainer.grid-view {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#documentContainer.list-view {
+    display: block;
+}
+
+.document-item {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin: 10px;
+    transition: all 0.3s ease;
+}
+
+.grid-view .document-item {
+    width: 150px;
+    text-align: center;
+}
+
+.list-view .document-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.document-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.list-view .document-icon {
+    margin-right: 15px;
+}
+
+.document-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

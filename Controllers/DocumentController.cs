@@ -4,9 +4,9 @@ namespace DMS_Hino.Controllers
 {
     public class DocumentController : Controller
     {
-        public IActionResult Index()
+        public IActionResult PublicDocument()
         {
-            return PartialView("DocumentView");
+            return View("DocumentView_test");
         }
     }
 }

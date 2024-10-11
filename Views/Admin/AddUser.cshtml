@@ -1,28 +1,80 @@
-﻿@{
-    ViewData["Title"] = "AddUser";
+﻿@model DMS_Hino.ViewModel.UserViewModel
+
+@{
+    ViewData["Title"] = "Add User";
 }
 
-<div class="container-fluid">
-    <div class="row">
+<h2>Add New User</h2>
 
-        <!-- Main Content -->
-        <h2>Dashboard</h2>
-
-        <div class=" container content active" id="dashboard-admin">
-            <h4>Tambah Pengguna Baru</h4>
-            <form asp-action="AddUser" method="post">
-                <div class="form-group mb-3">
-                    <label for="username">Username:</label>
-                    <input type="text" class="form-control" id="username" name="username" required>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="password">Password:</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Tambah User</button>
-            </form>
-        </div>
-
-
+<form asp-action="AddUser" method="post">
+    <div class="form-group">
+        <label asp-for="Username"></label>
+        <input asp-for="Username" class="form-control" required />
+        <span asp-validation-for="Username" class="text-danger"></span>
     </div>
-</div>
+
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" type="password" class="form-control" required />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Role"></label>
+        <select asp-for="Role" class="form-control" required>
+            <option value="">Select Role</option>
+            <option value="User">User</option>
+            <option value="Admin">Admin</option>
+        </select>
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DivisionId">Division</label>
+        <select asp-for="DivisionId" class="form-control" required>
+            <option value="">Select Division</option>
+            @foreach (var division in Model.Divisions)
+            {
+                <option value="@division.Id">@division.Name</option>
+            }
+        </select>
+        <span asp-validation-for="DivisionId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DepartmentId">Department</label>
+        <select asp-for="DepartmentId" class="form-control" required>
+            <option value="">Select Department</option>
+            @foreach (var department in Model.Departments)
+            {
+                <option value="@department.Id">@department.Name</option>
+            }
+        </select>
+        <span asp-validation-for="DepartmentId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add User</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+        <script>
+            document.getElementById("divisionDropdown").addEventListener("change", function () {
+                var divisionId = this.value;
+                var departmentDropdown = document.getElementById("departmentDropdown");
+
+                for (var i = 0; i < departmentDropdown.options.length; i++) {
+                    var option = departmentDropdown.options[i];
+                    if (option.getAttribute("data-division") === divisionId || option.value === "") {
+                        option.style.display = "block";
+                    } else {
+                        option.style.display = "none";
+                    }
+                }
+                departmentDropdown.value = ""; // Reset department dropdown when division changes
+            });
+        </script>
+    }
+}

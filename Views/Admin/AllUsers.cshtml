@@ -1,0 +1,47 @@
+﻿@model IEnumerable<DMS_Hino.Models.User> // Ganti dengan namespace model User Anda
+
+@{
+    ViewData["Title"] = "All Users";
+}
+
+<h2>User List</h2>
+
+<div class="text-right mb-3">
+    <a href="/Admin/AddUserView" class="btn btn-success ajax-link">Tambah User</a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.First().Username)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Role)</th>
+            <th>@Html.DisplayNameFor(model => model.First().DivisionId)</th>
+            <th>@Html.DisplayNameFor(model => model.First().DepartmentId)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Username</td>
+                <td>@user.Role</td>
+                <td>@user.Division?.Name</td>
+                <td>@user.Department?.Name</td>
+                <td>
+                    <a asp-action="UserDetail" asp-controller="Admin" asp-route-id="@user.Id" class="btn btn-info btn-sm">Detail</a>
+                    <a asp-action="DeleteUser" asp-route-id="@user.Id" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+
+
