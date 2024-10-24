@@ -14,14 +14,27 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 builder.Services.AddAuthentication("Cookies")
     .AddCookie(options =>
     {
-        options.LoginPath = "/Login/LoginPage";  // Redirect ke halaman login jika belum login
+        options.LoginPath = "/Login/LoginPage";
     });
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set the timeout for the session
+    options.Cookie.HttpOnly = true; // Make the session cookie HTTP only
+    options.Cookie.IsEssential = true; // Make the session cookie essential
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+});
 
 var app = builder.Build();
+
+app.UseSession();
 
 
 using (var scope = app.Services.CreateScope())

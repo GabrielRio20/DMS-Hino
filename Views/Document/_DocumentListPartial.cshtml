@@ -1,0 +1,43 @@
+﻿@model DMS_Hino.ViewModel.DocumentViewModel
+
+<!-- Document Display Area -->
+<div id="documentContainer" class="grid-view">
+    @if (Model.Documents != null && Model.Documents.Any())
+    {
+        @foreach (var document in Model.Documents)
+        {
+            var fileExtension = System.IO.Path.GetExtension(document.DocumentItem).ToLower(); // Get the file extension
+
+            <div class="document-item" onclick="showDocumentDetail('@document.Id')">
+                <div class="document-icon">
+                    @switch (fileExtension)
+                    {
+                        case ".pdf":
+                            <i class="bi bi-file-earmark-pdf" style="color:red;"></i> <!-- PDF icon -->
+                            break;
+                        case ".doc":
+                        case ".docx":
+                            <i class="bi bi-file-earmark-word" style="color:darkblue;"></i> <!-- Word icon -->
+                            break;
+                        case ".xls":
+                        case ".xlsx":
+                            <i class="bi bi-file-earmark-excel" style="color:forestgreen;"></i> <!-- Excel icon -->
+                            break;
+                        default:
+                            <i class="bi bi-file-earmark"></i> <!-- Default icon -->
+                            break;
+                    }
+                </div>
+                <div class="document-info">
+                    <span>@document.Name</span>
+                    <span>@document.CreatedAt.ToShortDateString()</span>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No documents found.</p>
+    }
+</div>
+

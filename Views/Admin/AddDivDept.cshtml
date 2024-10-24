@@ -1,0 +1,91 @@
+﻿@model DMS_Hino.ViewModel.DivisionDepartmentViewModel
+
+<div class="container">
+    <h2 class="mb-4">Create Division and Departments</h2>
+
+    <form asp-action="CreateDivisionWithDepartments" asp-controller="Admin" method="post">
+        <div id="divisions-section">
+            <div class="division-item mb-4 p-3 border rounded">
+                <h4 class="mb-3">Division 1</h4>
+                
+                <!-- Input Nama Division -->
+                <div class="mb-3">
+                    <label class="form-label">Division Name</label>
+                    <input type="text" name="Divisions[0].Name" class="form-control" placeholder="Enter division name" required />
+                </div>
+
+                <!-- Section untuk Departments -->
+                <div id="departments-section-0">
+                    <label class="form-label">Departments for this Division</label>
+                    
+                    <!-- Department pertama untuk Division -->
+                    <div class="department-item mb-2">
+                        <input type="text" name="Departments[0].Name" class="form-control" placeholder="Enter department name" required />
+                        <input type="hidden" name="Departments[0].DivisionId" value="0" />
+                    </div>
+                </div>
+
+                <!-- Tombol Add Department -->
+                <button type="button" class="btn btn-outline-secondary add-department-btn" data-division-index="0">
+                    Add Department
+                </button>
+            </div>
+        </div>
+
+        <!-- Tombol Add Division -->
+        <button type="button" id="add-division-btn" class="btn btn-outline-secondary mb-4">
+            Add Division
+        </button>
+
+        <!-- Tombol Submit -->
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        let divisionCount = 1;
+
+        // Fungsi untuk menambah Division baru
+        document.getElementById('add-division-btn').addEventListener('click', function () {
+            const divisionsSection = document.getElementById('divisions-section');
+            const newDivision = document.createElement('div');
+            newDivision.classList.add('division-item', 'mb-4', 'p-3', 'border', 'rounded');
+            newDivision.innerHTML = `
+                <h4 class="mb-3">Division ${divisionCount + 1}</h4>
+                <div class="mb-3">
+                    <label class="form-label">Division Name</label>
+                    <input type="text" name="Divisions[${divisionCount}].Name" class="form-control" placeholder="Enter division name" required />
+                </div>
+                <div id="departments-section-${divisionCount}">
+                    <label class="form-label">Departments for this Division</label>
+                    <div class="department-item mb-2">
+                        <input type="text" name="Departments[${divisionCount}].Name" class="form-control" placeholder="Enter department name" required />
+                        <input type="hidden" name="Departments[${divisionCount}].DivisionId" value="${divisionCount}" />
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline-secondary add-department-btn" data-division-index="${divisionCount}">
+                    Add Department
+                </button>
+            `;
+            divisionsSection.appendChild(newDivision);
+            divisionCount++;
+        });
+
+        // Fungsi untuk menambah Department baru
+        document.addEventListener('click', function (event) {
+            if (event.target && event.target.classList.contains('add-department-btn')) {
+                const divisionIndex = event.target.getAttribute('data-division-index');
+                const departmentsSection = document.getElementById(`departments-section-${divisionIndex}`);
+                const departmentCount = departmentsSection.querySelectorAll('.department-item').length;
+                const newDepartment = document.createElement('div');
+                newDepartment.classList.add('department-item', 'mb-2');
+                newDepartment.innerHTML = `
+                    <input type="text" name="Departments[${divisionIndex * 10 + departmentCount}].Name" class="form-control" placeholder="Enter department name" required />
+                    <input type="hidden" name="Departments[${divisionIndex * 10 + departmentCount}].DivisionId" value="${divisionIndex}" />
+                `;
+                departmentsSection.appendChild(newDepartment);
+            }
+        });
+    </script>
+}

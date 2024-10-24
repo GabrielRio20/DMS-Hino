@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Document";
+}
+
+<div class="container-fluid">
+    <div class="row">
+    <!-- Search Bar and Controls -->
+        <div class="d-flex flex-column mb-4">
+            <div class="d-flex justify-content-center mb-2">
+                <input type="text" class="form-control search-bar shadow-sm" placeholder="Search...">
+            </div>
+            <div class="d-flex justify-content-between">
+                <button class="btn btn-outline-primary">+</button>
+                <button class="btn btn-outline-secondary" id="toggleView" onclick="toggleView()">Grid</button>
+            </div>
+        </div>
+
+        <!-- Grid/List View -->
+        <div id="file-container" class="row row-cols-1 row-cols-md-6 g-2">
+            <div class="col" onclick="showDetails('File 1', '01-01-2023', 'User A', '05-01-2023')">
+                <div class="card h-100 text-center small-item">
+                    <div class="card-body">
+                        <img src="~/images/pdf icon.png" alt="File 1" class="file-icon">
+                    </div>
+                </div>
+                <p class="file-name text-center">File 1</p>
+            </div>
+
+            <div class="col" onclick="showDetails('File 1', '01-01-2023', 'User A', '05-01-2023')">
+                <div class="card h-100 text-center small-item">
+                    <div class="card-body">
+                        <img src="~/images/pdf icon.png" alt="File 1" class="file-icon">
+                    </div>
+                </div>
+                <p class="file-name text-center">File 1</p>
+            </div>
+
+            <div class="col" onclick="showDetails('File 1', '01-01-2023', 'User A', '05-01-2023')">
+                <div class="card h-100 text-center small-item">
+                    <div class="card-body">
+                        <img src="~/images/pdf icon.png" alt="File 1" class="file-icon">
+                    </div>
+                </div>
+                <p class="file-name text-center">File 1</p>
+            </div>
+
+            <div class="col" onclick="showDetails('File 1', '01-01-2023', 'User A', '05-01-2023')">
+                <div class="card h-100 text-center small-item">
+                    <div class="card-body">
+                        <img src="~/images/pdf icon.png" alt="File 1" class="file-icon">
+                    </div>
+                </div>
+                <p class="file-name text-center">File 1</p>
+            </div>
+
+            <div class="col" onclick="showDetails('File 1', '01-01-2023', 'User A', '05-01-2023')">
+                <div class="card h-100 text-center small-item">
+                    <div class="card-body">
+                        <img src="~/images/pdf icon.png" alt="File 1" class="file-icon">
+                    </div>
+                </div>
+                <p class="file-name text-center">File 1</p>
+            </div>
+
+            <div class="col" onclick="showDetails('File 1', '01-01-2023', 'User A', '05-01-2023')">
+                <div class="card h-100 text-center small-item">
+                    <div class="card-body">
+                        <img src="~/images/pdf icon.png" alt="File 1" class="file-icon">
+                    </div>
+                </div>
+                <p class="file-name text-center">File 2</p>
+            </div>
+
+            <div class="col" onclick="showDetails('File ', '01-01-2023', 'User A', '05-01-2023')">
+                <div class="card h-100 text-center small-item">
+                    <div class="card-body">
+                        <img src="~/images/pdf icon.png" alt="File 1" class="file-icon">
+                    </div>
+                </div>
+                <p class="file-name text-center">File 1</p>
+            </div>
+
+            <!-- Repeat for other files -->
+        </div>
+    </div>
+</div>
+

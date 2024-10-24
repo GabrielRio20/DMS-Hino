@@ -1,6 +1,7 @@
 ﻿using DMS_Hino.Data;
 using DMS_Hino.Models;
 using DMS_Hino.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using System.Security.Claims;
 
 namespace DMS_Hino.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly DatabaseContext _context;
@@ -26,44 +28,57 @@ namespace DMS_Hino.Controllers
         }
 
         [HttpGet]
-        public IActionResult AddUserView()
+        public async Task<IActionResult> AddUserView()
         {
             var viewModel = new UserViewModel
             {
-                Divisions = _context.Divisions.ToList(),
-                Departments = _context.Departments.ToList()
+                Divisions = await _context.Divisions.ToListAsync(),
+                Departments = await _context.Departments.ToListAsync()
             };
 
             return View("AddUser", viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckUsername(string username)
+        {
+            var isTaken = await _context.Users.AnyAsync(u => u.Username == username);
+            return Json(new { isTaken });
         }
 
         // Form untuk menambahkan user
         [HttpPost]
         public async Task<IActionResult> AddUser(UserViewModel model)
         {
-            ////if (ModelState.IsValid)
-            ////{
-                var newUser = new User
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Username = model.Username,
-                    Password = new PasswordHasher<User>().HashPassword(null, model.Password),  // Hash password
-                    Role = model.Role,
-                    DivisionId = model.DivisionId,
-                    DepartmentId = model.DepartmentId
-                };
+            if (await _context.Users.AnyAsync(u => u.Username == model.Username))
+            {
+                ModelState.AddModelError("Username", "Username is already taken.");
+                return View(model);  // Return the view with validation error
+            }
 
-                _context.Users.Add(newUser);
-                await _context.SaveChangesAsync();
+            var newUser = new User
+            {
+                Id = Guid.NewGuid().ToString(),
+                Username = model.Username,
+                Password = new PasswordHasher<User>().HashPassword(null, model.Password),  // Hash password
+                Role = model.Role,
+                DivisionId = model.DivisionId,
+                DepartmentId = model.DepartmentId
+            };
 
-                return RedirectToAction("AllUsers");
-            //}
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
 
-            // Jika validasi gagal, kembalikan ke view dengan model yang sama untuk perbaikan
-            model.Divisions = _context.Divisions.ToList();
-            model.Departments = _context.Departments.ToList();
-            return View(model);
+            // Ambil semua user dari database
+            var allUsers = await _context.Users.ToListAsync();
+
+            // Kembalikan list user ke view AllUsers
+            //return View("AllUsersView", allUsers);
+            return RedirectToAction("AllUsersView", "Admin");
+
         }
+
+
 
         [HttpGet]
         public IActionResult AddDivisionView()
@@ -126,7 +141,71 @@ namespace DMS_Hino.Controllers
             return View("AllDivDept", viewModel);
         }
 
-        // GET: Display the user detail page with edit option
+        public IActionResult AddDivDept()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreateDivisionWithDepartments(DivisionDepartmentViewModel model)
+        {
+            foreach (var division in model.Divisions)
+            {
+                if (string.IsNullOrEmpty(division.Id))
+                {
+                    division.Id = Guid.NewGuid().ToString();  
+                }
+
+                _context.Divisions.Add(division);
+                _context.SaveChanges();  
+
+                foreach (var department in model.Departments)
+                {
+                    if (string.IsNullOrEmpty(department.Id))
+                    {
+                        department.Id = Guid.NewGuid().ToString();  
+                    }
+
+                    department.DivisionId = division.Id;
+                    _context.Departments.Add(department);  
+                }
+
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("AllDivisionsAndDepartments", "Admin");
+        }
+
+        [HttpPost]
+        public IActionResult UpdateDivisionName(string id, string name)
+        {
+            var division = _context.Divisions.FirstOrDefault(d => d.Id == id);
+            if (division == null)
+            {
+                return NotFound();
+            }
+
+            division.Name = name;
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public IActionResult UpdateDepartmentName(string id, string name)
+        {
+            var department = _context.Departments.FirstOrDefault(d => d.Id == id);
+            if (department == null)
+            {
+                return NotFound();
+            }
+
+            department.Name = name;
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
         [HttpGet]
         public async Task<IActionResult> UserDetail(string id)
         {
@@ -156,39 +235,76 @@ namespace DMS_Hino.Controllers
             return View(model);
         }
 
-
-        // POST: Save the edited user data
         [HttpPost]
         public async Task<IActionResult> SaveUser(UserViewModel model)
         {
-            // Validate model before saving changes
-            //if (ModelState.IsValid)
-            //{
-                // Retrieve the user to update
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == model.Id);
-                if (user == null)
-                {
-                    return NotFound(); // Return 404 if user not found
-                }
+            // Retrieve the user to update
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == model.Id);
+            if (user == null)
+            {
+                return NotFound(); // Return 404 if user not found
+            }
 
-                // Update user properties with new values from the form
-                user.Username = model.Username;
-                user.Role = model.Role;
-                user.DivisionId = model.DivisionId;
-                user.DepartmentId = model.DepartmentId;
+            // Update user properties with new values from the form
+            user.Username = model.Username;
+            user.Role = model.Role;
+            user.DivisionId = model.DivisionId;
+            user.DepartmentId = model.DepartmentId;
 
-                // Save changes to the database
+            // Check if the password field is not empty (means user wants to change the password)
+            if (!string.IsNullOrEmpty(model.Password))
+            {
+                // Hash the new password before saving it using PasswordHasher
+                user.Password = new PasswordHasher<User>().HashPassword(user, model.Password);
+            }
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+
+            // Redirect back to detail view after saving
+            return RedirectToAction("UserDetail", new { id = model.Id });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                TempData["Message"] = "Invalid user ID.";
+                return RedirectToAction("AllUsersView");
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null)
+            {
+                TempData["Message"] = "User not found.";
+                return RedirectToAction("AllUsersView");
+            }
+
+            // Optional: Handle documents before deleting the user, for example, disassociating the user
+            foreach (var document in user.CreatedDocuments)
+            {
+                document.CreatedBy = null;  // Disassociate the creator
+            }
+
+            foreach (var document in user.ModifiedDocuments)
+            {
+                document.ModifiedBy = null;  // Disassociate the last modifier
+            }
+
+            try
+            {
+                _context.Users.Remove(user);
                 await _context.SaveChangesAsync();
+                TempData["Message"] = "User deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                TempData["Message"] = "Error deleting user: " + ex.Message;
+            }
 
-                // Redirect back to detail view after saving
-                return RedirectToAction("UserDetail", new { id = model.Id });
-            //}
-
-            // If model validation fails, reload the page with division and department data
-            model.Divisions = await _context.Divisions.ToListAsync();
-            model.Departments = await _context.Departments.ToListAsync();
-
-            return View("UserDetail", model); // Reload the form with current data
+            return RedirectToAction("AllUsersView");
         }
     }
 }

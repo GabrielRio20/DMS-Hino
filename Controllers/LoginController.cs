@@ -1,6 +1,7 @@
 ﻿using DMS_Hino.Data;
 using DMS_Hino.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -45,24 +46,36 @@ public class LoginController : Controller
 
         // Jika login sukses, autentikasi user (menggunakan cookie authentication)
         var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Role, user.Role)
-        };
+    {
+        new Claim(ClaimTypes.Name, user.Username),
+        new Claim(ClaimTypes.Role, user.Role),
+        new Claim("UserId", user.Id)
+    };
 
         var claimsIdentity = new ClaimsIdentity(claims, "Login");
         var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
         await HttpContext.SignInAsync(claimsPrincipal);
 
-        return RedirectToAction("Index", "Home");  // Arahkan ke halaman utama setelah login sukses
+        // Redirect to the default page based on user role
+        if (user.Role == "Admin")
+        {
+            return RedirectToAction("AllUsersView", "Admin");
+        }
+        else if (user.Role == "User")
+        {
+            return RedirectToAction("PublicDocument", "Document");
+        }
+
+        return RedirectToAction("Index", "Home");
     }
 
     // Fungsi logout
     [HttpPost]
     public async Task<IActionResult> Logout()
     {
-        await HttpContext.SignOutAsync();
+        HttpContext.Session.Clear();
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("LoginPage");
     }
 }

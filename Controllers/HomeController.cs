@@ -17,7 +17,8 @@ namespace DMS_Hino.Controllers
 
         public IActionResult Index()
         {
-            return RedirectToAction("AllUsersView", "Admin");
+            return View();
+            //return RedirectToAction("AllUsersView", "Admin");
         }
 
         public IActionResult Privacy()

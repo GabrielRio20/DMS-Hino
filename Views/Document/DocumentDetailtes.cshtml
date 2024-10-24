@@ -1,0 +1,114 @@
+﻿@model DMS_Hino.Models.Document
+
+<div class="document-detail-page">
+    <div class="document-header">
+        <h1 class="document-title">@Model.Name</h1>
+
+        <!-- Tombol Edit di kanan atas -->
+        <div class="edit-controls">
+            <button id="edit-btn" onclick="toggleEditMode()">Edit</button>
+            <button id="save-btn" onclick="saveChanges()" style="display: none;">Save</button>
+            <button id="cancel-btn" onclick="cancelEdit()" style="display: none;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Kontainer untuk tata letak dua kolom -->
+    <div class="document-detail-container">
+        <!-- Kolom kiri: Preview dokumen -->
+        <div class="document-preview-large">
+            @{
+                var fileExtension = System.IO.Path.GetExtension(Model.DocumentItem).ToLower();
+            }
+
+            @switch (fileExtension)
+            {
+                case ".pdf":
+                    <embed src="@Url.Content("~/documents/" + Model.DocumentItem)" type="application/pdf" width="100%" height="400px" /> <!-- Preview besar untuk PDF -->
+                    break;
+                case ".jpg":
+                case ".jpeg":
+                case ".png":
+                case ".gif":
+                    <img src="@Url.Content("~/documents/" + Model.DocumentItem)" alt="@Model.Name" class="document-image-preview" /> <!-- Preview gambar -->
+                    break;
+                case ".doc":
+                case ".docx":
+                    <p>Word document preview not available. <a href="@Url.Content("~/documents/" + Model.DocumentItem)" target="_blank">Download</a> to view.</p>
+                    break;
+                case ".xls":
+                case ".xlsx":
+                    <p>Excel document preview not available. <a href="@Url.Content("~/documents/" + Model.DocumentItem)" target="_blank">Download</a> to view.</p>
+                    break;
+                default:
+                    <p>Preview not available. <a href="@Url.Content("~/documents/" + Model.DocumentItem)" target="_blank">Download</a> to view.</p>
+                    break;
+            }
+        </div>
+
+        <!-- Kolom kanan: Informasi detail dokumen -->
+        <div class="document-info-detail">
+            <div class="document-info">
+                <p><strong>Document Number:</strong> <span id="document-number">@Model.Number</span></p>
+                <p><strong>Document Version:</strong> <span id="document-version">@Model.VersionName</span></p>
+                <p><strong>Released Date:</strong> <span id="document-date">@Model.ReleasedDate.ToShortDateString()</span></p>
+                <p><strong>Tag:</strong> <span id="document-tag">@Model.Tag</span></p>
+                <p><strong>Location:</strong> <span id="document-location">@Model.Location</span></p>
+                <p><strong>Category:</strong> <span id="document-category">@Model.Category</span></p>
+            </div>
+
+            <!-- Tombol kembali -->
+            <div class="back-to-list">
+                <a href="@Url.Action("PublicDocument", "Document")">Back to Document List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript untuk Mode Edit -->
+<script>
+    function toggleEditMode() {
+        const fields = ['number', 'version', 'date', 'tag', 'location', 'category'];
+        fields.forEach(field => {
+            let element = document.getElementById(`document-${field}`);
+            let value = element.innerText;
+            element.innerHTML = `<input type="text" id="input-${field}" value="${value}" />`;
+        });
+
+        // Menampilkan tombol Save dan Cancel
+        document.getElementById('edit-btn').style.display = 'none';
+        document.getElementById('save-btn').style.display = 'inline-block';
+        document.getElementById('cancel-btn').style.display = 'inline-block';
+    }
+
+    function saveChanges() {
+        const fields = ['number', 'version', 'date', 'tag', 'location', 'category'];
+        fields.forEach(field => {
+            let input = document.getElementById(`input-${field}`);
+            let newValue = input.value;
+            document.getElementById(`document-${field}`).innerText = newValue;
+        });
+
+        // Kembali ke mode tampilan biasa
+        document.getElementById('edit-btn').style.display = 'inline-block';
+        document.getElementById('save-btn').style.display = 'none';
+        document.getElementById('cancel-btn').style.display = 'none';
+
+        // Kirim data yang diubah ke server
+        // Implementasi penyimpanan ke database bisa dilakukan di sini.
+        alert('Changes saved.');
+    }
+
+    function cancelEdit() {
+        // Kembali ke mode tampilan biasa tanpa menyimpan
+        const fields = ['number', 'version', 'date', 'tag', 'location', 'category'];
+        fields.forEach(field => {
+            let input = document.getElementById(`input-${field}`);
+            document.getElementById(`document-${field}`).innerText = input.defaultValue;
+        });
+
+        // Kembali ke mode tampilan biasa
+        document.getElementById('edit-btn').style.display = 'inline-block';
+        document.getElementById('save-btn').style.display = 'none';
+        document.getElementById('cancel-btn').style.display = 'none';
+    }
+</script>

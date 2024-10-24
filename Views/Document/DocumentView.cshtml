@@ -1,87 +1,149 @@
-﻿@{
-    ViewData["Title"] = "Document";
-}
+﻿@model DMS_Hino.ViewModel.DocumentViewModel
 
-<div class="container-fluid">
-    <div class="row">
-    <!-- Search Bar and Controls -->
-        <div class="d-flex flex-column mb-4">
-            <div class="d-flex justify-content-center mb-2">
-                <input type="text" class="form-control search-bar shadow-sm" placeholder="Search...">
-            </div>
-            <div class="d-flex justify-content-between">
-                <button class="btn btn-outline-primary">+</button>
-                <button class="btn btn-outline-secondary" id="toggleView" onclick="toggleView()">Grid</button>
-            </div>
-        </div>
+<div class="d-flex justify-content-between mb-3">
+    <!-- Add Document Button (Top Left) -->
+    <div class="text-right mb-3">
+        <a href="/Document/DocumentAddView" class="btn btn-success ajax-link">Add Document</a>
+    </div>
+    <!-- Search Bar (Top Center) -->
+    <div class="w-50">
+        <input type="text" id="searchBar" class="form-control" placeholder="Search for documents..." onkeyup="searchDocuments()">
+    </div>
 
-        <!-- Grid/List View -->
-        <div id="file-container" class="row row-cols-1 row-cols-md-6 g-2">
-            <div class="col" onclick="showDetails('File 1', '01-01-2023', 'User A', '05-01-2023')">
-                <div class="card h-100 text-center small-item">
-                    <div class="card-body">
-                        <img src="~/images/pdf icon.png" alt="File 1" class="file-icon">
-                    </div>
-                </div>
-                <p class="file-name text-center">File 1</p>
-            </div>
-
-            <div class="col" onclick="showDetails('File 1', '01-01-2023', 'User A', '05-01-2023')">
-                <div class="card h-100 text-center small-item">
-                    <div class="card-body">
-                        <img src="~/images/pdf icon.png" alt="File 1" class="file-icon">
-                    </div>
-                </div>
-                <p class="file-name text-center">File 1</p>
-            </div>
-
-            <div class="col" onclick="showDetails('File 1', '01-01-2023', 'User A', '05-01-2023')">
-                <div class="card h-100 text-center small-item">
-                    <div class="card-body">
-                        <img src="~/images/pdf icon.png" alt="File 1" class="file-icon">
-                    </div>
-                </div>
-                <p class="file-name text-center">File 1</p>
-            </div>
-
-            <div class="col" onclick="showDetails('File 1', '01-01-2023', 'User A', '05-01-2023')">
-                <div class="card h-100 text-center small-item">
-                    <div class="card-body">
-                        <img src="~/images/pdf icon.png" alt="File 1" class="file-icon">
-                    </div>
-                </div>
-                <p class="file-name text-center">File 1</p>
-            </div>
-
-            <div class="col" onclick="showDetails('File 1', '01-01-2023', 'User A', '05-01-2023')">
-                <div class="card h-100 text-center small-item">
-                    <div class="card-body">
-                        <img src="~/images/pdf icon.png" alt="File 1" class="file-icon">
-                    </div>
-                </div>
-                <p class="file-name text-center">File 1</p>
-            </div>
-
-            <div class="col" onclick="showDetails('File 1', '01-01-2023', 'User A', '05-01-2023')">
-                <div class="card h-100 text-center small-item">
-                    <div class="card-body">
-                        <img src="~/images/pdf icon.png" alt="File 1" class="file-icon">
-                    </div>
-                </div>
-                <p class="file-name text-center">File 2</p>
-            </div>
-
-            <div class="col" onclick="showDetails('File ', '01-01-2023', 'User A', '05-01-2023')">
-                <div class="card h-100 text-center small-item">
-                    <div class="card-body">
-                        <img src="~/images/pdf icon.png" alt="File 1" class="file-icon">
-                    </div>
-                </div>
-                <p class="file-name text-center">File 1</p>
-            </div>
-
-            <!-- Repeat for other files -->
-        </div>
+    <!-- View Switcher (Top Right) -->
+    <div>
+        <button class="btn btn-secondary" id="toggleViewButton" onclick="toggleView()">Switch to List View</button>
     </div>
 </div>
 
+<!-- Document Display Area -->
+<div id="documentContainer" class="grid-view">
+    @if (Model.Documents != null && Model.Documents.Any())
+    {
+        @foreach (var document in Model.Documents)
+        {
+            var fileExtension = System.IO.Path.GetExtension(document.DocumentItem).ToLower(); // Get the file extension
+
+            <div class="document-item" onclick="showDocumentDetail('@document.Id')">
+                <div class="document-icon">
+                    @switch (fileExtension)
+                    {
+                        case ".pdf":
+                            <i class="bi bi-file-earmark-pdf" style="color:red;"></i> <!-- PDF icon -->
+                            break;
+                        case ".doc":
+                        case ".docx":
+                            <i class="bi bi-file-earmark-word" style="color:darkblue;"></i> <!-- Word icon -->
+                            break;
+                        case ".xls":
+                        case ".xlsx":
+                            <i class="bi bi-file-earmark-excel" style="color:forestgreen;"></i> <!-- Excel icon -->
+                            break;
+                        default:
+                            <i class="bi bi-file-earmark"></i> <!-- Default icon -->
+                            break;
+                    }
+                </div>
+                <div class="document-info">
+                    <span>@document.Name</span>
+                    <span>@document.CreatedAt.ToShortDateString()</span>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No documents found.</p>
+    }
+</div>
+
+<!-- Sidebar for Document Details -->
+<div id="documentDetailSidebar" class="document-sidebar">
+    <!-- Close Button (Left Top) -->
+    <button onclick="closeSidebar()" class="close-sidebar-btn">&gt;</button>
+
+    <div id="documentDetailContent">
+        <!-- Content will be loaded dynamically here -->
+    </div>
+
+</div>
+
+
+
+<script>
+    function toggleView() {
+        var container = document.getElementById("documentContainer");
+        var button = document.getElementById("toggleViewButton");
+
+        if (container.classList.contains("grid-view")) {
+            container.classList.remove("grid-view");
+            container.classList.add("list-view");
+            button.textContent = "Switch to Grid View"; // Change button text
+        } else {
+            container.classList.remove("list-view");
+            container.classList.add("grid-view");
+            button.textContent = "Switch to List View"; // Change button text
+        }
+    }
+
+    function searchDocuments() {
+        var searchTerm = document.getElementById("searchBar").value;
+
+        $.ajax({
+            url: '/Document/SearchDocuments',
+            type: 'GET',
+            data: { searchTerm: searchTerm },
+            success: function (result) {
+                $('#documentContainer').html(result); // Update documentContainer with the filtered result
+            },
+            error: function (xhr, status, error) {
+                console.error("Error during search: ", error);
+            }
+        });
+    }
+
+    @* function showDocumentDetail(documentId) {
+        $.ajax({
+            url: '/Document/GetDocumentDetail', // Ensure this URL points to the correct controller action
+            type: 'GET',
+            data: { id: documentId },
+            success: function (result) {
+                // Display the returned HTML (your view content) inside the sidebar
+                $('#documentDetailContent').html(result);
+
+                // Open the sidebar
+                $('#documentDetailSidebar').addClass('open');
+                $('#documentContainer').addClass('sidebar-open');
+            },
+            error: function (xhr, status, error) {
+                console.error("Error loading document details:", error);
+            }
+        });
+    } *@
+
+    function showDocumentDetail(documentId) {
+        $.ajax({
+            url: '/Document/GetDocumentDetail',
+            type: 'GET',
+            data: { id: documentId },
+            success: function (result) {
+                // Memuat konten detail dokumen dan preview
+                $('#documentDetailContent').html(result);
+
+                // Membuka sidebar
+                $('#documentDetailSidebar').addClass('open');
+                $('#documentContainer').addClass('sidebar-open');
+            },
+            error: function (xhr, status, error) {
+                console.error("Error loading document details:", error);
+            }
+        });
+    }
+
+
+    function closeSidebar() {
+        // Close the sidebar
+        $('#documentDetailSidebar').removeClass('open');
+        $('#documentContainer').removeClass('sidebar-open');
+    }
+</script>

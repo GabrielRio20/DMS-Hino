@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DMS-Hino")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4329f90632b42d233cb2d02f48a0dfa31532c682")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+80e891f7fafa1b01c694f7dab60b7fbbb6f27327")]
 [assembly: System.Reflection.AssemblyProductAttribute("DMS-Hino")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DMS-Hino")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

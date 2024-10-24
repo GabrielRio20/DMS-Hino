@@ -22,6 +22,10 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQWRkRGVwYXJ0bWVudC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Repos/DMS-Hino/DMS-Hino/Views/Admin/AddDivDept.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQWRkRGl2RGVwdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Repos/DMS-Hino/DMS-Hino/Views/Admin/AddDivision.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQWRkRGl2aXNpb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -42,12 +46,32 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVXNlckRldGFpbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Repos/DMS-Hino/DMS-Hino/Views/Document/DocumentAdd.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdW1lbnRcRG9jdW1lbnRBZGQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Repos/DMS-Hino/DMS-Hino/Views/Document/DocumentDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdW1lbnRcRG9jdW1lbnREZXRhaWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Repos/DMS-Hino/DMS-Hino/Views/Document/DocumentDetailtes.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdW1lbnRcRG9jdW1lbnREZXRhaWx0ZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Repos/DMS-Hino/DMS-Hino/Views/Document/DocumentSidebar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdW1lbnRcRG9jdW1lbnRTaWRlYmFyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Repos/DMS-Hino/DMS-Hino/Views/Document/DocumentView.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdW1lbnRcRG9jdW1lbnRWaWV3LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Repos/DMS-Hino/DMS-Hino/Views/Document/DocumentView_test.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdW1lbnRcRG9jdW1lbnRWaWV3X3Rlc3QuY3NodG1s
+[D:/Repos/DMS-Hino/DMS-Hino/Views/Document/DocumentView_unused.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdW1lbnRcRG9jdW1lbnRWaWV3X3VudXNlZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Repos/DMS-Hino/DMS-Hino/Views/Document/_DocumentListPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdW1lbnRcX0RvY3VtZW50TGlzdFBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Repos/DMS-Hino/DMS-Hino/Views/Home/Index-example.cshtml]

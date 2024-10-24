@@ -38,13 +38,13 @@ namespace DMS_Hino.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "category1",
-                            Name = "Legal"
+                            Id = "1",
+                            Name = "Category1"
                         },
                         new
                         {
-                            Id = "category2",
-                            Name = "Technical"
+                            Id = "2",
+                            Name = "Category2"
                         });
                 });
 
@@ -66,6 +66,20 @@ namespace DMS_Hino.Migrations
                     b.HasIndex("DivisionId");
 
                     b.ToTable("Departments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            DivisionId = "1",
+                            Name = "Department1"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            DivisionId = "2",
+                            Name = "Department2"
+                        });
                 });
 
             modelBuilder.Entity("DMS_Hino.Models.Division", b =>
@@ -80,6 +94,18 @@ namespace DMS_Hino.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Divisions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            Name = "Division1"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            Name = "Division2"
+                        });
                 });
 
             modelBuilder.Entity("DMS_Hino.Models.Document", b =>
@@ -91,11 +117,10 @@ namespace DMS_Hino.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedById")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DocumentItem")
@@ -149,174 +174,6 @@ namespace DMS_Hino.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("Documents");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "doc1",
-                            CategoryId = "existing-category1",
-                            CreatedAt = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedById = "existing-user1",
-                            DocumentItem = "Legal Agreement",
-                            ExpDate = new DateTime(2025, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPublic = true,
-                            Location = "Locker A-1",
-                            Name = "Service Agreement",
-                            Number = "LA-2024-01",
-                            ReleasedDate = new DateTime(2024, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Reminder = 30,
-                            Tag = "Contract",
-                            VersionName = "v1.0"
-                        },
-                        new
-                        {
-                            Id = "doc2",
-                            CategoryId = "existing-category2",
-                            CreatedAt = new DateTime(2024, 2, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedById = "existing-user2",
-                            DocumentItem = "Project Report",
-                            ExpDate = new DateTime(2026, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPublic = true,
-                            Location = "Locker B-2",
-                            Name = "Annual Report",
-                            Number = "PR-2024-02",
-                            ReleasedDate = new DateTime(2024, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Reminder = 60,
-                            Tag = "Report",
-                            VersionName = "v2.0"
-                        },
-                        new
-                        {
-                            Id = "doc3",
-                            CategoryId = "existing-category3",
-                            CreatedAt = new DateTime(2024, 3, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedById = "existing-user3",
-                            DocumentItem = "User Guide",
-                            IsPublic = false,
-                            Location = "Locker C-3",
-                            Name = "System User Guide",
-                            Number = "UG-2024-03",
-                            ReleasedDate = new DateTime(2024, 3, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Tag = "Manual",
-                            VersionName = "v3.0"
-                        },
-                        new
-                        {
-                            Id = "doc4",
-                            CategoryId = "existing-category1",
-                            CreatedAt = new DateTime(2024, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedById = "existing-user4",
-                            DocumentItem = "Policy Document",
-                            ExpDate = new DateTime(2025, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPublic = true,
-                            Location = "Locker D-4",
-                            Name = "Company Policy",
-                            Number = "PD-2024-04",
-                            ReleasedDate = new DateTime(2024, 4, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Reminder = 45,
-                            Tag = "Policy",
-                            VersionName = "v1.1"
-                        },
-                        new
-                        {
-                            Id = "doc5",
-                            CategoryId = "existing-category2",
-                            CreatedAt = new DateTime(2024, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedById = "existing-user5",
-                            DocumentItem = "Invoice",
-                            ExpDate = new DateTime(2025, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPublic = false,
-                            Location = "Locker E-5",
-                            Name = "Invoice for Services",
-                            Number = "IN-2024-05",
-                            ReleasedDate = new DateTime(2024, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Reminder = 30,
-                            Tag = "Invoice",
-                            VersionName = "v1.0"
-                        },
-                        new
-                        {
-                            Id = "doc6",
-                            CategoryId = "existing-category3",
-                            CreatedAt = new DateTime(2024, 6, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedById = "existing-user6",
-                            DocumentItem = "Audit Report",
-                            ExpDate = new DateTime(2025, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPublic = true,
-                            Location = "Locker F-6",
-                            Name = "Internal Audit",
-                            Number = "AR-2024-06",
-                            ReleasedDate = new DateTime(2024, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Reminder = 60,
-                            Tag = "Audit",
-                            VersionName = "v1.0"
-                        },
-                        new
-                        {
-                            Id = "doc7",
-                            CategoryId = "existing-category1",
-                            CreatedAt = new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedById = "existing-user7",
-                            DocumentItem = "Technical Specification",
-                            ExpDate = new DateTime(2025, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPublic = true,
-                            Location = "Locker G-7",
-                            Name = "Product Specification",
-                            Number = "TS-2024-07",
-                            ReleasedDate = new DateTime(2024, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Reminder = 15,
-                            Tag = "Specification",
-                            VersionName = "v2.1"
-                        },
-                        new
-                        {
-                            Id = "doc8",
-                            CategoryId = "existing-category2",
-                            CreatedAt = new DateTime(2024, 8, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedById = "existing-user8",
-                            DocumentItem = "Memo",
-                            ExpDate = new DateTime(2025, 8, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPublic = false,
-                            Location = "Locker H-8",
-                            Name = "Internal Memo",
-                            Number = "ME-2024-08",
-                            ReleasedDate = new DateTime(2024, 8, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Reminder = 30,
-                            Tag = "Memo",
-                            VersionName = "v1.0"
-                        },
-                        new
-                        {
-                            Id = "doc9",
-                            CategoryId = "existing-category3",
-                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedById = "existing-user9",
-                            DocumentItem = "Financial Statement",
-                            IsPublic = true,
-                            Location = "Locker I-9",
-                            Name = "Quarterly Financials",
-                            Number = "FS-2024-09",
-                            ReleasedDate = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Tag = "Finance",
-                            VersionName = "v1.2"
-                        },
-                        new
-                        {
-                            Id = "doc10",
-                            CategoryId = "existing-category1",
-                            CreatedAt = new DateTime(2024, 10, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedById = "existing-user10",
-                            DocumentItem = "Presentation",
-                            ExpDate = new DateTime(2025, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsPublic = false,
-                            Location = "Locker J-10",
-                            Name = "Project Presentation",
-                            Number = "PR-2024-10",
-                            ReleasedDate = new DateTime(2024, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Reminder = 30,
-                            Tag = "Presentation",
-                            VersionName = "v1.0"
-                        });
                 });
 
             modelBuilder.Entity("DMS_Hino.Models.DocumentRelation", b =>
@@ -398,6 +255,26 @@ namespace DMS_Hino.Migrations
                     b.HasIndex("DivisionId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            DepartmentId = "1",
+                            DivisionId = "1",
+                            Password = "hashedpassword",
+                            Role = "Admin",
+                            Username = "creatorUser"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            DepartmentId = "2",
+                            DivisionId = "2",
+                            Password = "hashedpassword",
+                            Role = "User",
+                            Username = "modifierUser"
+                        });
                 });
 
             modelBuilder.Entity("DMS_Hino.Models.Department", b =>
@@ -422,8 +299,7 @@ namespace DMS_Hino.Migrations
                     b.HasOne("DMS_Hino.Models.User", "CreatedBy")
                         .WithMany("CreatedDocuments")
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("DMS_Hino.Models.User", "ModifiedBy")
                         .WithMany("ModifiedDocuments")

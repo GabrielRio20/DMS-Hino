@@ -77,185 +77,47 @@ namespace DMS_Hino.Data
                 .HasForeignKey(ds => ds.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Seed Categories
-            modelBuilder.Entity<Category>().HasData(
-                new Category { Id = "category1", Name = "Legal" },
-                new Category { Id = "category2", Name = "Technical" }
+            // Seeding Divisions
+            modelBuilder.Entity<Division>().HasData(
+                new Division { Id = "1", Name = "Division1" },
+                new Division { Id = "2", Name = "Division2" }
             );
 
-            modelBuilder.Entity<Models.Document>().HasData(
-                new Models.Document
+            // Seeding Departments with Foreign Key to Divisions
+            modelBuilder.Entity<Department>().HasData(
+                new Department { Id = "1", Name = "Department1", DivisionId = "1" },
+                new Department { Id = "2", Name = "Department2", DivisionId = "2" }
+            );
+
+            // Seeding Users with Foreign Keys to Division and Department
+            modelBuilder.Entity<User>().HasData(
+                new User
                 {
-                    Id = "doc1",
-                    DocumentItem = "Legal Agreement",
-                    Number = "LA-2024-01",
-                    Name = "Service Agreement",
-                    VersionName = "v1.0",
-                    ReleasedDate = new DateTime(2024, 1, 15),
-                    Tag = "Contract",
-                    Location = "Locker A-1",
-                    IsPublic = true,
-                    CategoryId = "existing-category1", // Ensure this ID exists in your Category table
-                    CreatedById = "existing-user1", // Ensure this ID exists in your User table
-                    ExpDate = new DateTime(2025, 1, 15),
-                    Reminder = 30,
-                    CreatedAt = new DateTime(2024, 1, 10)
+                    Id = "1",
+                    Username = "creatorUser",
+                    Password = "hashedpassword",  // Remember to hash passwords in real applications
+                    Role = "Admin",
+                    DivisionId = "1",  // FK to Division
+                    DepartmentId = "1", // FK to Department
+                    DocumentUpload = null
                 },
-                new Models.Document
+                new User
                 {
-                    Id = "doc2",
-                    DocumentItem = "Project Report",
-                    Number = "PR-2024-02",
-                    Name = "Annual Report",
-                    VersionName = "v2.0",
-                    ReleasedDate = new DateTime(2024, 2, 10),
-                    Tag = "Report",
-                    Location = "Locker B-2",
-                    IsPublic = true,
-                    CategoryId = "existing-category2",
-                    CreatedById = "existing-user2",
-                    ExpDate = new DateTime(2026, 2, 10),
-                    Reminder = 60,
-                    CreatedAt = new DateTime(2024, 2, 1)
-                },
-                new Models.Document
-                {
-                    Id = "doc3",
-                    DocumentItem = "User Guide",
-                    Number = "UG-2024-03",
-                    Name = "System User Guide",
-                    VersionName = "v3.0",
-                    ReleasedDate = new DateTime(2024, 3, 5),
-                    Tag = "Manual",
-                    Location = "Locker C-3",
-                    IsPublic = false,
-                    CategoryId = "existing-category3",
-                    CreatedById = "existing-user3",
-                    ExpDate = null,
-                    Reminder = null,
-                    CreatedAt = new DateTime(2024, 3, 1)
-                },
-                new Models.Document
-                {
-                    Id = "doc4",
-                    DocumentItem = "Policy Document",
-                    Number = "PD-2024-04",
-                    Name = "Company Policy",
-                    VersionName = "v1.1",
-                    ReleasedDate = new DateTime(2024, 4, 15),
-                    Tag = "Policy",
-                    Location = "Locker D-4",
-                    IsPublic = true,
-                    CategoryId = "existing-category1",
-                    CreatedById = "existing-user4",
-                    ExpDate = new DateTime(2025, 4, 15),
-                    Reminder = 45,
-                    CreatedAt = new DateTime(2024, 4, 1)
-                },
-                new Models.Document
-                {
-                    Id = "doc5",
-                    DocumentItem = "Invoice",
-                    Number = "IN-2024-05",
-                    Name = "Invoice for Services",
-                    VersionName = "v1.0",
-                    ReleasedDate = new DateTime(2024, 5, 20),
-                    Tag = "Invoice",
-                    Location = "Locker E-5",
-                    IsPublic = false,
-                    CategoryId = "existing-category2",
-                    CreatedById = "existing-user5",
-                    ExpDate = new DateTime(2025, 5, 20),
-                    Reminder = 30,
-                    CreatedAt = new DateTime(2024, 5, 1)
-                },
-                new Models.Document
-                {
-                    Id = "doc6",
-                    DocumentItem = "Audit Report",
-                    Number = "AR-2024-06",
-                    Name = "Internal Audit",
-                    VersionName = "v1.0",
-                    ReleasedDate = new DateTime(2024, 6, 25),
-                    Tag = "Audit",
-                    Location = "Locker F-6",
-                    IsPublic = true,
-                    CategoryId = "existing-category3",
-                    CreatedById = "existing-user6",
-                    ExpDate = new DateTime(2025, 6, 25),
-                    Reminder = 60,
-                    CreatedAt = new DateTime(2024, 6, 1)
-                },
-                new Models.Document
-                {
-                    Id = "doc7",
-                    DocumentItem = "Technical Specification",
-                    Number = "TS-2024-07",
-                    Name = "Product Specification",
-                    VersionName = "v2.1",
-                    ReleasedDate = new DateTime(2024, 7, 10),
-                    Tag = "Specification",
-                    Location = "Locker G-7",
-                    IsPublic = true,
-                    CategoryId = "existing-category1",
-                    CreatedById = "existing-user7",
-                    ExpDate = new DateTime(2025, 7, 10),
-                    Reminder = 15,
-                    CreatedAt = new DateTime(2024, 7, 1)
-                },
-                new Models.Document
-                {
-                    Id = "doc8",
-                    DocumentItem = "Memo",
-                    Number = "ME-2024-08",
-                    Name = "Internal Memo",
-                    VersionName = "v1.0",
-                    ReleasedDate = new DateTime(2024, 8, 5),
-                    Tag = "Memo",
-                    Location = "Locker H-8",
-                    IsPublic = false,
-                    CategoryId = "existing-category2",
-                    CreatedById = "existing-user8",
-                    ExpDate = new DateTime(2025, 8, 5),
-                    Reminder = 30,
-                    CreatedAt = new DateTime(2024, 8, 1)
-                },
-                new Models.Document
-                {
-                    Id = "doc9",
-                    DocumentItem = "Financial Statement",
-                    Number = "FS-2024-09",
-                    Name = "Quarterly Financials",
-                    VersionName = "v1.2",
-                    ReleasedDate = new DateTime(2024, 9, 15),
-                    Tag = "Finance",
-                    Location = "Locker I-9",
-                    IsPublic = true,
-                    CategoryId = "existing-category3",
-                    CreatedById = "existing-user9",
-                    ExpDate = null,
-                    Reminder = null,
-                    CreatedAt = new DateTime(2024, 9, 1)
-                },
-                new Models.Document
-                {
-                    Id = "doc10",
-                    DocumentItem = "Presentation",
-                    Number = "PR-2024-10",
-                    Name = "Project Presentation",
-                    VersionName = "v1.0",
-                    ReleasedDate = new DateTime(2024, 10, 10),
-                    Tag = "Presentation",
-                    Location = "Locker J-10",
-                    IsPublic = false,
-                    CategoryId = "existing-category1",
-                    CreatedById = "existing-user10",
-                    ExpDate = new DateTime(2025, 10, 10),
-                    Reminder = 30,
-                    CreatedAt = new DateTime(2024, 10, 1)
+                    Id = "2",
+                    Username = "modifierUser",
+                    Password = "hashedpassword",
+                    Role = "User",
+                    DivisionId = "2",  // FK to Division
+                    DepartmentId = "2", // FK to Department
+                    DocumentUpload = null
                 }
             );
 
+            // Seeding Categories
+            modelBuilder.Entity<Category>().HasData(
+                new Category { Id = "1", Name = "Category1" },
+                new Category { Id = "2", Name = "Category2" }
+            );
         }
     }
 }

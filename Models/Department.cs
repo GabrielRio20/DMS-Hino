@@ -7,15 +7,8 @@ namespace DMS_Hino.Models
     {
         public string Id { get; set; }
         public string Name { get; set; }
-
-        // Foreign key to Division
         public string DivisionId { get; set; }
         public Division Division { get; set; }
-
-        // Navigation property to Users
         public ICollection<User> Users { get; set; }
     }
-
-
-
 }

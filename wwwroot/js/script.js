@@ -100,4 +100,65 @@ document.addEventListener('click', function (event) {
     }
 });
 
+// Mendapatkan elemen dropZone dan input file
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('DocumentItem');
+
+// Prevent default behavior (Prevent file from being opened)
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+// Highlight area when file is dragged over
+['dragenter', 'dragover'].forEach(eventName => {
+    dropZone.addEventListener(eventName, () => dropZone.classList.add('highlight'), false);
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, () => dropZone.classList.remove('highlight'), false);
+});
+
+// Handle dropped files
+dropZone.addEventListener('drop', (e) => {
+    const files = e.dataTransfer.files;
+    fileInput.files = files; // Assign dropped file to input element
+});
+
+
+//sidebar kanan
+function showDocumentDetail(documentId) {
+    $.ajax({
+        url: '/Document/GetDocumentDetail',
+        type: 'GET',
+        data: { id: documentId },
+        success: function (result) {
+            // Display document details in the sidebar
+            $('#documentDetailContent').html(`
+                <h3>${result.name}</h3>
+                <p><strong>Tag:</strong> ${result.tag}</p>
+                <p><strong>Released Date:</strong> ${result.releasedDate}</p>
+            `);
+
+            // Open sidebar
+            $('#documentDetailSidebar').addClass('open');
+            $('#documentContainer').addClass('sidebar-open');
+        },
+        error: function (xhr, status, error) {
+            console.error("Error loading document details:", error);
+        }
+    });
+}
+
+function closeSidebar() {
+    // Close sidebar
+    $('#documentDetailSidebar').removeClass('open');
+    $('#documentContainer').removeClass('sidebar-open');
+}
+
+
 

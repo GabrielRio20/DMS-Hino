@@ -40,3 +40,332 @@
     flex-direction: column;
     justify-content: center;
 }
+
+/*add document*/
+
+.upload-area {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#previewContainer {
+    position: relative;
+    margin-top: 10px;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 5px;
+}
+
+.remove-btn:hover {
+    background: darkred;
+}
+
+.form-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.left-side, .right-side {
+    flex: 1;
+    min-width: 300px;
+}
+
+.field-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+input[type="text"], input[type="number"], input[type="date"], select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+#dropZone {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #f9f9f9;
+}
+
+#dropZone.highlight {
+    border-color: #00b4d8;
+    background-color: #e0f7fa;
+}
+
+#dropZone input[type="file"] {
+    display: none; /* Sembunyikan input file */
+}
+
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.save-btn {
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+    .save-btn:hover {
+        background-color: #218838;
+    }
+
+#expirationFields {
+    display: none;
+    margin-top: 20px;
+}
+
+.reminder-container {
+    display: flex;
+    align-items: center; /* Untuk menyelaraskan input dan teks 'days' di tengah secara vertikal */
+}
+
+.reminder-container input[type="number"] {
+    width: 80px; /* Mengecilkan lebar input */
+    padding: 5px; /* Mengurangi padding agar input lebih kecil */
+    margin-right: 10px; /* Memberi jarak antara input dan teks 'days' */
+}
+
+.reminder-container span {
+    font-size: 0.9em; /* Mengecilkan ukuran teks 'days' */
+    color: #555; /* Warna opsional untuk teks 'days' */
+}
+
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .form-container {
+        flex-direction: column;
+    }
+}
+
+/* Sidebar Styling */
+.document-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 25%; /* Lebar sidebar dikurangi menjadi 25% */
+    height: 100%;
+    background-color: #f8f9fa;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+.document-sidebar.open {
+    transform: translateX(0);
+}
+
+/* Close Button Styling */
+.close-sidebar-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #333;
+    outline: none;
+}
+
+.close-sidebar-btn:hover {
+    color: #007bff;
+}
+
+/* Content Area */
+.document-detail {
+    margin-top: 50px;
+}
+
+/* Document Preview Styling */
+.document-preview {
+    max-width: 100%;
+    margin-top: 20px;
+}
+
+.document-preview embed,
+.document-preview img {
+    width: 100%;
+    height: 150px; /* Preview item diperkecil menjadi 150px */
+    object-fit: contain;
+}
+
+/* Typography Adjustments */
+.document-detail h3 {
+    font-size: 18px; /* Font-size lebih kecil */
+    margin-bottom: 10px;
+}
+
+.document-detail p {
+    margin: 5px 0;
+    font-size: 13px; /* Ukuran font lebih kecil untuk tata letak lebih padat */
+    color: #555;
+}
+
+
+/* Adjust the document container when the sidebar is open */
+.grid-view.sidebar-open {
+    width: calc(100% - 250px); /* Adjust grid width when sidebar is open */
+    transition: width 0.3s ease;
+}
+
+.list-view.sidebar-open {
+    width: calc(100% - 250px); /* Adjust list width when sidebar is open */
+    transition: width 0.3s ease;
+}
+
+/* Button See Details Styling */
+.see-details-btn-container {
+    position: absolute;
+    bottom: 20px; /* Letakkan tombol di bagian bawah */
+    right: 20px;
+}
+
+.see-details-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.see-details-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Gaya untuk halaman detail dokumen */
+.document-detail-page {
+    padding: 30px;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    line-height: 1.6;
+}
+
+.document-title {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #1a1a1a;
+}
+
+.document-detail-container {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    padding: 20px 0;
+    border-top: 1px solid #e0e0e0;
+}
+
+.document-preview-large {
+    flex: 2;
+    max-width: 60%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+.document-image-preview {
+    width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.document-info-detail {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #fafafa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.document-info p {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.document-info p strong {
+    font-weight: 600;
+}
+
+.back-to-list {
+    margin-top: 20px;
+}
+
+.back-to-list a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #1a73e8;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    font-size: 14px;
+}
+
+.back-to-list a:hover {
+    background-color: #155ab4;
+}
+
+/* Responsif */
+@media (max-width: 768px) {
+    .document-detail-container {
+        flex-direction: column;
+    }
+
+    .document-preview-large, .document-info-detail {
+        max-width: 100%;
+    }
+}
+
+

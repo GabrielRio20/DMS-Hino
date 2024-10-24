@@ -1,4 +1,19 @@
 ﻿@model IEnumerable<DMS_Hino.Models.User> // Ganti dengan namespace model User Anda
+@Html.AntiForgeryToken()
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 
 @{
     ViewData["Title"] = "All Users";
@@ -11,6 +26,7 @@
 </div>
 
 <table class="table table-striped">
+    @Html.AntiForgeryToken()
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.First().Username)</th>
@@ -30,18 +46,57 @@
                 <td>@user.Department?.Name</td>
                 <td>
                     <a asp-action="UserDetail" asp-controller="Admin" asp-route-id="@user.Id" class="btn btn-info btn-sm">Detail</a>
-                    <a asp-action="DeleteUser" asp-route-id="@user.Id" class="btn btn-danger btn-sm">Delete</a>
+                    <button type="button" class="btn btn-danger btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteUserModal"
+                            data-user-id="@user.Id"
+                            data-user-name="@user.Username">
+                        Delete
+                    </button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteUserModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete <strong id="userName"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="#" id="confirmDeleteBtn" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
 
-    @section Scripts {
-        @{
-            await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        }
-    }
+<script>
+    // Event listener saat modal terbuka
+    var deleteUserModal = document.getElementById('deleteUserModal');
+    deleteUserModal.addEventListener('show.bs.modal', function (event) {
+        // Dapatkan tombol yang memicu modal
+        var button = event.relatedTarget;
+
+        // Ambil data-user-id dan data-user-name dari tombol
+        var userId = button.getAttribute('data-user-id');
+        var userName = button.getAttribute('data-user-name');
+
+        // Set nama user di dalam modal
+        var userNameSpan = document.getElementById('userName');
+        userNameSpan.textContent = userName;
+
+        // Set link delete dengan ID user
+        var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        confirmDeleteBtn.setAttribute('href', '/Admin/DeleteUser/' + userId);
+    });
+</script>
+
 
 

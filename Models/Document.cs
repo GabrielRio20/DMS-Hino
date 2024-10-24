@@ -19,7 +19,7 @@ namespace DMS_Hino.Models
         public string CategoryId { get; set; }
         public Category Category { get; set; }
 
-        public string CreatedById { get; set; } // Foreign Key to User
+        public string? CreatedById { get; set; } // Foreign Key to User
         public User CreatedBy { get; set; }
 
         public string? ModifiedById { get; set; } // Foreign Key to User (nullable)
@@ -27,7 +27,7 @@ namespace DMS_Hino.Models
 
         public DateTime? ExpDate { get; set; }
         public int? Reminder { get; set; }
-        public DateTime? CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
         public DateTime? ModifiedAt { get; set; }
 
         // Navigation Properties

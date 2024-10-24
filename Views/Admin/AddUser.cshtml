@@ -6,11 +6,12 @@
 
 <h2>Add New User</h2>
 
-<form asp-action="AddUser" method="post">
+<form asp-action="AddUser" asp-controller="Admin" method="post">
     <div class="form-group">
         <label asp-for="Username"></label>
-        <input asp-for="Username" class="form-control" required />
+        <input asp-for="Username" class="form-control" id="username" required onkeyup="checkUsernameAvailability()" />
         <span asp-validation-for="Username" class="text-danger"></span>
+        <small id="username-error" class="text-danger"></small>
     </div>
 
     <div class="form-group">
@@ -29,9 +30,10 @@
         <span asp-validation-for="Role" class="text-danger"></span>
     </div>
 
+    <!-- Dropdown for Division -->
     <div class="form-group">
         <label asp-for="DivisionId">Division</label>
-        <select asp-for="DivisionId" class="form-control" required>
+        <select asp-for="DivisionId" class="form-control" id="divisionDropdown" required>
             <option value="">Select Division</option>
             @foreach (var division in Model.Divisions)
             {
@@ -41,40 +43,73 @@
         <span asp-validation-for="DivisionId" class="text-danger"></span>
     </div>
 
+    <!-- Dropdown for Department -->
     <div class="form-group">
         <label asp-for="DepartmentId">Department</label>
-        <select asp-for="DepartmentId" class="form-control" required>
+        <select asp-for="DepartmentId" class="form-control" id="departmentDropdown" required>
             <option value="">Select Department</option>
             @foreach (var department in Model.Departments)
             {
-                <option value="@department.Id">@department.Name</option>
+                <option value="@department.Id" data-division-id="@department.DivisionId">@department.Name</option>
             }
         </select>
         <span asp-validation-for="DepartmentId" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Add User</button>
+    <button type="submit" class="btn btn-primary" id="submit-btn" disabled>Add User</button>
 </form>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+<!-- JavaScript untuk Filter Department Berdasarkan Division -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Saat division dipilih
+        $('#divisionDropdown').on('change', function () {
+            var selectedDivisionId = $(this).val();
 
-        <script>
-            document.getElementById("divisionDropdown").addEventListener("change", function () {
-                var divisionId = this.value;
-                var departmentDropdown = document.getElementById("departmentDropdown");
+            // Sembunyikan atau tampilkan department yang sesuai dengan division
+            $('#departmentDropdown option').each(function () {
+                var departmentDivisionId = $(this).data('division-id');
 
-                for (var i = 0; i < departmentDropdown.options.length; i++) {
-                    var option = departmentDropdown.options[i];
-                    if (option.getAttribute("data-division") === divisionId || option.value === "") {
-                        option.style.display = "block";
-                    } else {
-                        option.style.display = "none";
-                    }
+                if (departmentDivisionId == selectedDivisionId || $(this).val() == "") {
+                    $(this).show();
+                } else {
+                    $(this).hide();
                 }
-                departmentDropdown.value = ""; // Reset department dropdown when division changes
             });
-        </script>
+
+            // Reset pilihan department
+            $('#departmentDropdown').val('');
+        });
+
+        // Cek ketersediaan username
+        $('#username').on('keyup', function () {
+            checkUsernameAvailability();
+        });
+    });
+
+    function checkUsernameAvailability() {
+        var username = $('#username').val();
+
+        // Mengirim AJAX untuk cek username
+        $.ajax({
+            url: '/Admin/CheckUsername',
+            type: 'GET',
+            data: { username: username },
+            success: function (response) {
+                if (response.isTaken) {
+                    $('#username-error').text('Username is already taken.');
+                    $('#submit-btn').prop('disabled', true);
+                } else {
+                    $('#username-error').text('');
+                    $('#submit-btn').prop('disabled', false);
+                }
+            },
+            error: function () {
+                $('#username-error').text('Error checking username.');
+                $('#submit-btn').prop('disabled', true);
+            }
+        });
     }
-}
+</script>
+

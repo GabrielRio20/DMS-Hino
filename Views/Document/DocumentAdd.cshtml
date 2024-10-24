@@ -1,0 +1,161 @@
+﻿@model DMS_Hino.ViewModel.DocumentViewModel
+
+@{
+    ViewData["Title"] = "Add Document";
+}
+
+<h2>Add Document</h2>
+
+<form class="document-form" action="/Document/DocumentAdd" method="post" enctype="multipart/form-data">
+    <div class="form-container">
+        <!-- Left side: Drag and Drop area -->
+        <div class="left-side">
+            <label for="DocumentItem" class="upload-label">Upload Document</label>
+            <div id="dropZone" class="upload-area" onclick="document.getElementById('DocumentItem').click()">
+                <!-- Preview Area (Initially hidden) -->
+                <div id="previewContainer" style="display: none;">
+                    <div id="previewArea">
+                        <!-- Dynamic preview content will be inserted here -->
+                    </div>
+                    <button type="button" id="removeFileButton" class="remove-btn" onclick="removeFile()">&#10006;</button>
+                </div>
+
+                <!-- Default message when no file is uploaded -->
+                <p id="defaultUploadMessage">Drag & Drop file here or click to upload</p>
+                <input type="file" id="DocumentItem" name="DocumentItem" accept=".pdf, .docx, .txt, .xls, .xlsx" onchange="previewDocument(event)" style="display: none;">
+            </div>
+
+            <div class="checkbox-container">
+                <label for="IsPublic">Is Public?</label>
+                <input type="checkbox" id="IsPublic" name="IsPublic">
+            </div>
+
+            <!-- Expiration Fields -->
+            <div class="field-group">
+                <div class="checkbox-container">
+                    <label for="isExpiration">Has Expiration?</label>
+                    <input type="checkbox" id="isExpiration" name="isExpiration" onchange="toggleExpirationFields()">
+                </div>
+            </div>
+
+            <!-- Expiration Date and Reminder (initially hidden) -->
+            <div id="expirationFields">
+                <div class="field-group">
+                    <label for="ExpDate">Document Expired Date</label>
+                    <input type="date" id="ExpDate" name="ExpDate">
+                </div>
+
+                <div class="field-group">
+                    <label for="Reminder">Reminder</label>
+                    <div class="reminder-container">
+                        <input type="number" id="Reminder" name="Reminder">
+                        <span>days</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right side: Form Fields -->
+        <div class="right-side">
+            <div class="field-group">
+                <label for="Name">Document Name</label>
+                <input type="text" id="Name" name="Name" required>
+            </div>
+
+            <div class="field-group">
+                <label for="Number">Document Number</label>
+                <input type="text" id="Number" name="Number" required>
+            </div>
+
+            <div class="field-group">
+                <label for="VersionName">Version Name (Optional)</label>
+                <input type="text" id="VersionName" name="VersionName">
+            </div>
+
+            <div class="field-group">
+                <label for="ReleasedDate">Document Released Date</label>
+                <input type="date" id="ReleasedDate" name="ReleasedDate">
+            </div>
+
+            <div class="field-group">
+                <label for="Tag">Document Tag</label>
+                <input type="text" id="Tag" name="Tag">
+            </div>
+
+            <div class="field-group">
+                <label for="Location">Document Location</label>
+                <input type="text" id="Location" name="Location">
+            </div>
+
+            <div class="field-group">
+                <label for="CategoryId">Document Category</label>
+                <select id="CategoryId" name="CategoryId" required>
+                    <option value="" disabled selected>Select a category</option>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+            </div>
+
+            <button type="submit" class="save-btn">Save</button>
+        </div>
+    </div>
+</form>
+
+
+
+
+<script>
+    function toggleExpirationFields() {
+        var isChecked = document.getElementById("isExpiration").checked;
+        var expirationFields = document.getElementById("expirationFields");
+        expirationFields.style.display = isChecked ? "grid" : "none";
+    }
+
+    function previewDocument(event) {
+        const file = event.target.files[0];
+        const previewContainer = document.getElementById('previewContainer');
+        const previewArea = document.getElementById('previewArea');
+        const defaultUploadMessage = document.getElementById('defaultUploadMessage');
+
+        // Reset preview area
+        previewArea.innerHTML = '';
+
+        if (file) {
+            const fileType = file.type;
+            const fileUrl = URL.createObjectURL(file);
+
+            // Show preview area and hide default message
+            previewContainer.style.display = 'block';
+            defaultUploadMessage.style.display = 'none';
+
+            if (fileType === 'application/pdf') {
+                // Preview PDF using <iframe>
+                previewArea.innerHTML = `<iframe src="${fileUrl}" width="100%" height="200px"></iframe>`;
+            } else if (fileType === 'text/plain') {
+                // Preview text file by reading content
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewArea.innerHTML = `<pre>${e.target.result}</pre>`;
+                };
+                reader.readAsText(file);
+            } else {
+                // For other file types like .docx, show a file name
+                previewArea.innerHTML = `<p>File uploaded: ${file.name}</p>`;
+            }
+        }
+    }
+
+    function removeFile() {
+        const documentItemInput = document.getElementById('DocumentItem');
+        const previewContainer = document.getElementById('previewContainer');
+        const defaultUploadMessage = document.getElementById('defaultUploadMessage');
+
+        // Clear the file input and reset the preview
+        documentItemInput.value = '';
+        previewContainer.style.display = 'none';
+        defaultUploadMessage.style.display = 'block';
+    }
+</script>
+

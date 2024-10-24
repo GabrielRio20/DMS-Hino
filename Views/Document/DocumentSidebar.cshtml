@@ -1,0 +1,49 @@
+﻿<div class="document-detail">
+    <h3>@Model.Name</h3>
+
+    @* Preview Section *@
+    <div class="document-preview">
+        @{
+            var fileExtension = System.IO.Path.GetExtension(Model.DocumentItem).ToLower();
+        }
+
+        @switch (fileExtension)
+        {
+            case ".pdf":
+                <embed src="@Url.Content("~/documents/" + Model.DocumentItem)" type="application/pdf" width="100%" height="400px" />
+                break;
+            case ".jpg":
+            case ".jpeg":
+            case ".png":
+            case ".gif":
+                <img src="@Url.Content("~/documents/" + Model.DocumentItem)" alt="@Model.Name" width="100%" />
+                break;
+            case ".doc":
+            case ".docx":
+                <p>Word document preview not available. <a href="@Url.Content("~/documents/" + Model.DocumentItem)" target="_blank">Download</a> to view.</p>
+                break;
+            case ".xls":
+            case ".xlsx":
+                <p>Excel document preview not available. <a href="@Url.Content("~/documents/" + Model.DocumentItem)" target="_blank">Download</a> to view.</p>
+                break;
+            default:
+                <p>Preview not available. <a href="@Url.Content("~/documents/" + Model.DocumentItem)" target="_blank">Download</a> to view.</p>
+                break;
+        }
+    </div>
+
+    <p><strong>Tag:</strong> @Model.Tag</p>
+    <p><strong>Released Date:</strong> @Model.ReleasedDate.ToShortDateString()</p>
+
+    <!-- See Details Button -->
+    <div class="see-details-btn-container">
+        <a href="@Url.Action("DocumentDetail", "Document", new { id = Model.Id })" class="see-details-btn">See Details</a>
+    </div>
+
+
+    
+</div>
+
+
+
+                                                                                                                                                                                                                                    

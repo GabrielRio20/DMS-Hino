@@ -1,0 +1,163 @@
+﻿@model DMS_Hino.Models.Document
+
+<div class="document-detail-page">
+    <div class="document-header">
+        <!-- Edit button on the right top -->
+        <div class="edit-controls">
+            <button id="edit-btn" onclick="toggleEditMode()">Edit</button>
+            <button id="save-btn" style="display: none;" type="submit" form="edit-document-form">Save</button>
+            <button id="cancel-btn" onclick="cancelEdit()" style="display: none;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Form untuk mengirim data ke controller -->
+    <form id="edit-document-form" method="post" action="@Url.Action("EditDocument", "Document")" enctype="multipart/form-data">
+        <!-- Gunakan input type="hidden" untuk mengirimkan DocumentId -->
+        <input type="hidden" name="DocumentId" value="@Model.Id" />
+
+        <!-- Document Title, editable in edit mode -->
+        <h1 class="document-title">
+            <span id="document-name" name="Name" value="@Model.Name">@Model.Name</span>
+        </h1>
+
+        <!-- Container for the layout with two columns -->
+        <div class="document-detail-container">
+            <!-- Left column: Document preview -->
+            <div class="document-preview-large">
+                @{
+                    var fileExtension = System.IO.Path.GetExtension(Model.DocumentItem).ToLower();
+                }
+
+                @switch (fileExtension)
+                {
+                    case ".pdf":
+                        <embed src="@Url.Content("~/documents/" + Model.DocumentItem)" type="application/pdf" width="100%" height="400px" />
+                        break;
+                    case ".jpg":
+                    case ".jpeg":
+                    case ".png":
+                    case ".gif":
+                        <img src="@Url.Content("~/documents/" + Model.DocumentItem)" alt="@Model.Name" class="document-image-preview" />
+                        break;
+                    default:
+                        <p>Preview not available. <a href="@Url.Content("~/documents/" + Model.DocumentItem)" target="_blank">Download</a> to view.</p>
+                        break;
+                }
+
+                <!-- Input for changing the document file, shown only in edit mode -->
+                <div id="file-upload" style="display: none;">
+                    <input type="file" id="document-file" name="DocumentFile" />
+                </div>
+            </div>
+
+            <!-- Right column: Document details -->
+            <div class="document-info-detail">
+                <div class="document-info">
+                    <p><strong>Document Number:</strong> 
+                        <span id="document-number" name="Number" value="@Model.Number">@Model.Number</span>
+                    </p>
+                    <p><strong>Document Version:</strong> <span id="document-version" name="VersionName" value="@Model.VersionName">@Model.VersionName</span></p>
+                    <p><strong>Released Date:</strong> <span id="document-date" name="ReleasedDate" value="@Model.ReleasedDate">@Model.ReleasedDate.ToShortDateString()</span></p>
+                    <p><strong>Tag:</str> <span id="document-tag" name="Tag" value="@Model.Tag">@Model.Tag</span></p>
+                    <p><strong>Location:</strong> <span id="document-location" name="Location" value="@Model.Location">@Model.Location</span></p>
+
+                    <!-- Dropdown for category, shown in edit mode -->
+                    <p>
+                        <strong>Category:</strong>
+                        <span id="document-category">@Model.Category.Name</span>
+                    </p>
+                </div>
+
+                <div class="back-to-list">
+                    <a href="@Url.Action("PublicDocument", "Document")">Back to Document List</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- JavaScript for Edit Mode -->
+<script>
+    let initialValues = {};
+
+    function toggleEditMode() {
+        console.log("Edit mode triggered");
+
+        // Save initial values
+        initialValues['name'] = document.getElementById('document-name').innerText;
+        initialValues['number'] = document.getElementById('document-number').innerText;
+        initialValues['version'] = document.getElementById('document-version').innerText;
+        initialValues['date'] = document.getElementById('document-date').innerText;
+        initialValues['tag'] = document.getElementById('document-tag').innerText;
+        initialValues['location'] = document.getElementById('document-location').innerText;
+        initialValues['category'] = document.getElementById('document-category').innerText;
+
+        // Replace document name with an input field
+        document.getElementById('document-name').outerHTML = `<input type="text" id="input-name" name="Name" value="${initialValues['name']}" />`;
+
+        // Replace other fields with editable input fields
+        document.getElementById('document-number').outerHTML = `<input type="text" id="input-number" name="Number" value="${initialValues['number']}" />`;
+        document.getElementById('document-version').outerHTML = `<input type="text" id="input-version" name="VersionName" value="${initialValues['version']}" />`;
+        document.getElementById('document-date').outerHTML = `<input type="date" id="input-date" name="ReleasedDate" value="${initialValues['date']}" />`;
+        document.getElementById('document-tag').outerHTML = `<input type="text" id="input-tag" name="Tag" value="${initialValues['tag']}" />`;
+        document.getElementById('document-location').outerHTML = `<input type="text" id="input-location" name="Location" value="${initialValues['location']}" />`;
+
+        // Build category options from Razor (generated by server)
+        let categoryOptions = `
+        @foreach (var category in ViewBag.Categories)
+        {
+            <option value="@category.Id">@category.Name</option>
+        }
+        `;
+
+        // Replace category name with a dropdown select
+        document.getElementById('document-category').outerHTML =
+            `<select id="input-category" name="CategoryId">${categoryOptions}</select>`;
+
+        // Set the selected option to match the current category
+        document.getElementById('input-category').value = '@Model.CategoryId';
+
+        // Show file upload input and save/cancel buttons
+        document.getElementById('file-upload').style.display = 'block';
+        document.getElementById('edit-btn').style.display = 'none';
+        document.getElementById('save-btn').style.display = 'inline-block';
+        document.getElementById('cancel-btn').style.display = 'inline-block';
+    }
+
+
+    function saveChanges() {
+        console.log("Saving changes"); // Debugging log
+
+        // Get new values from inputs
+        let newValues = {
+            name: document.getElementById('input-name').value,
+            number: document.getElementById('input-number').value,
+            version: document.getElementById('input-version').value,
+            date: document.getElementById('input-date').value,
+            tag: document.getElementById('input-tag').value,
+            location: document.getElementById('input-location').value,
+            category: document.getElementById('input-category').options[document.getElementById('input-category').selectedIndex].text
+        };
+
+        // Update display with new values
+        document.getElementById('document-name').innerText = newValues.name;
+        document.getElementById('document-number').innerText = newValues.number;
+        document.getElementById('document-version').innerText = newValues.version;
+        document.getElementById('document-date').innerText = newValues.date;
+        document.getElementById('document-tag').innerText = newValues.tag;
+        document.getElementById('document-location').innerText = newValues.location;
+        document.getElementById('document-category').innerText = newValues.category;
+
+        // Hide file upload and save/cancel buttons
+        document.getElementById('file-upload').style.display = 'none';
+        document.getElementById('edit-btn').style.display = 'inline-block';
+        document.getElementById('save-btn').style.display = 'none';
+        document.getElementById('cancel-btn').style.display = 'none';
+    }
+
+    function cancelEdit() {
+        console.log("Edit mode canceled"); 
+        location.reload();
+    }
+
+</script>
