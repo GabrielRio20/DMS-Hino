@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "r1cHgo7MageqXbhIgp9KvZHCnEdKljXjfg6kj0JbZq8=",
+  "Hash": "4NadbA25wYb3+W2QXImLsRYqH0fnJlWuCfwuCtx0mOo=",
   "Source": "DMS-Hino",
   "BasePath": "_content/DMS-Hino",
   "Mode": "Default",
@@ -452,6 +452,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\documents\\ba0b04d6-d708-435a-a164-249f636b8de1.pdf"
+    },
+    {
+      "Identity": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\bc9ab86f-2af4-4d17-840b-7a6fee553b6b.png",
+      "SourceId": "DMS-Hino",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\",
+      "BasePath": "_content/DMS-Hino",
+      "RelativePath": "documents/bc9ab86f-2af4-4d17-840b-7a6fee553b6b.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\documents\\bc9ab86f-2af4-4d17-840b-7a6fee553b6b.png"
     },
     {
       "Identity": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\becaaa5d-bb67-470b-9068-5d9500ef869b.xlsx",

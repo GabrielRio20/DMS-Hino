@@ -90,23 +90,51 @@ namespace DMS_Hino.Controllers
 
         public async Task<IActionResult> DocumentAddView(string categoryId)
         {
-            // Ambil kategori dari database
+            // Load categories from the database
             var categories = await _context.Categories
                 .Where(c => c.ParentId == null)
                 .Include(c => c.Children)
                     .ThenInclude(c => c.Children)
                 .ToListAsync();
 
-            // Konversi ke List<CategoryViewModel> menggunakan fungsi MapCategoriesToViewModels
+            // Load divisions and departments from the database
+            var divisions = await _context.Divisions.Include(d => d.Departments).ToListAsync();
+
+            // Map categories to CategoryViewModel
             var categoryViewModels = MapCategoriesToViewModels(categories);
 
+            // Populate DivisionDepartmentViewModel
+            var divisionDepartmentViewModel = new DivisionDepartmentViewModel
+            {
+                Divisions = divisions,
+                Departments = divisions.SelectMany(d => d.Departments).ToList()
+            };
+
+            // Create the DocumentViewModel and set DivisionDepartmentViewModel
             var model = new DocumentViewModel
             {
                 Categories = categoryViewModels,
-                SelectedCategoryId = categoryId
+                SelectedCategoryId = categoryId,
+                DivisionDepartmentViewModel = divisionDepartmentViewModel
             };
 
             return View("DocumentAdd", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDepartmentsByDivision(string divisionId)
+        {
+            if (string.IsNullOrEmpty(divisionId))
+            {
+                return BadRequest("Division ID is required.");
+            }
+
+            var departments = await _context.Departments
+                .Where(d => d.DivisionId == divisionId)
+                .Select(d => new { id = d.Id, name = d.Name })
+                .ToListAsync();
+
+            return Json(departments);
         }
 
         private List<CategoryViewModel> MapCategoriesToViewModels(List<Category> categories)
@@ -198,7 +226,7 @@ namespace DMS_Hino.Controllers
                 return NotFound();
             }
 
-            return PartialView("DocumentSidebar", document);  // Mengembalikan partial view
+            return PartialView("DocumentSidebar", document); 
         }
 
         public IActionResult DocumentDetail(string id)

@@ -15,6 +15,7 @@
         <!-- Left side: Drag and Drop area -->
         <div class="left-side">
             <input type="hidden" id="CategoryId" name="CategoryId" value="@Model.SelectedCategoryId" />
+
             <label for="DocumentItem" class="upload-label">Upload Document</label>
             <div id="dropZone" class="upload-area" onclick="document.getElementById('DocumentItem').click()">
                 <!-- Preview Area (Initially hidden) -->
@@ -32,8 +33,28 @@
 
             <div class="checkbox-container">
                 <label for="IsPublic">Is Public?</label>
-                <input type="checkbox" id="IsPublic" name="IsPublic">
+                <input type="checkbox" id="IsPublic" name="IsPublic" onchange="toggleDivisionDepartmentPopup()">
             </div>
+
+            <div class="field-group">
+                <label for="DivisionId">Division</label>
+                <select id="DivisionId" name="DivisionId" onchange="toggleDepartmentField()">
+                    <option value="">Select a division</option>
+                    @foreach (var division in Model.DivisionDepartmentViewModel.Divisions)
+                    {
+                        <option value="@division.Id">@division.Name</option>
+                    }
+                </select>
+            </div>
+
+            <div class="field-group" id="departmentField" style="display: none;">
+                <label for="DepartmentId">Department</label>
+                <select id="DepartmentId" name="DepartmentId">
+                    <option value="">Select a department</option>
+                    <!-- Departments will be loaded dynamically -->
+                </select>
+            </div>
+
 
             <!-- Expiration Fields -->
             <div class="field-group">
@@ -44,7 +65,7 @@
             </div>
 
             <!-- Expiration Date and Reminder (initially hidden) -->
-            <div id="expirationFields">
+            <div id="expirationFields" style="display: none;">
                 <div class="field-group">
                     <label for="ExpDate">Document Expired Date</label>
                     <input type="date" id="ExpDate" name="ExpDate">
@@ -82,11 +103,6 @@
                 <input type="date" id="ReleasedDate" name="ReleasedDate">
             </div>
 
-            @* <div class="field-group">
-                <label for="ExpDate">Document Expired Date</label>
-                <input type="date" id="ExpDate" name="ExpDate">
-            </div> *@
-
             <div class="field-group">
                 <label for="Tag">Document Tag</label>
                 <input type="text" id="Tag" name="Tag">
@@ -102,12 +118,12 @@
     </div>
 </form>
 
+
+
 <script>
-   
     function toggleExpirationFields() {
         var isChecked = document.getElementById("isExpiration").checked;
-        var expirationFields = document.getElementById("expirationFields");
-        expirationFields.style.display = isChecked ? "grid" : "none";
+        document.getElementById("expirationFields").style.display = isChecked ? "grid" : "none";
     }
 
     function previewDocument(event) {
@@ -116,9 +132,7 @@
         const previewArea = document.getElementById('previewArea');
         const defaultUploadMessage = document.getElementById('defaultUploadMessage');
 
-        // Clear previous preview content
         previewArea.innerHTML = '';
-
         if (file) {
             const fileType = file.type;
             const fileUrl = URL.createObjectURL(file);
@@ -127,42 +141,93 @@
             defaultUploadMessage.style.display = 'none';
 
             if (fileType === 'application/pdf') {
-                // Preview PDF files
                 previewArea.innerHTML = `<iframe src="${fileUrl}" width="100%" height="200px"></iframe>`;
             } else if (fileType.startsWith('image/')) {
-                // Preview images (JPEG, PNG, etc.)
                 previewArea.innerHTML = `<img src="${fileUrl}" alt="Document Preview" style="max-width:100%; height:auto;">`;
-            } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-                // Preview .docx files using Mammoth.js
-                const reader = new FileReader();
-                reader.onload = function (event) {
-                    mammoth.convertToHtml({ arrayBuffer: event.target.result })
-                        .then(result => {
-                            previewArea.innerHTML = `<div style="width:100%; height:200px; overflow:auto; border:1px solid #ccc; padding:10px;">${result.value}</div>`;
-                        })
-                        .catch(error => {
-                            previewArea.innerHTML = `<p>Error loading document: ${error.message}</p>`;
-                        });
-                };
-                reader.readAsArrayBuffer(file);
             } else {
-                // Fallback for unsupported file types
                 previewArea.innerHTML = `<p>File uploaded: ${file.name}</p><p>Preview not available for this file type.</p>`;
             }
         }
     }
 
-    
     function removeFile() {
-        const documentItemInput = document.getElementById('DocumentItem');
-        const previewContainer = document.getElementById('previewContainer');
-        const defaultUploadMessage = document.getElementById('defaultUploadMessage');
-
-        documentItemInput.value = '';
-        previewContainer.style.display = 'none';
-        defaultUploadMessage.style.display = 'block';
+        document.getElementById('DocumentItem').value = '';
+        document.getElementById('previewContainer').style.display = 'none';
+        document.getElementById('defaultUploadMessage').style.display = 'block';
     }
 
+    function toggleDepartmentField() {
+        var divisionId = document.getElementById("DivisionId").value;
+        var departmentField = document.getElementById("departmentField");
+        var departmentSelect = document.getElementById("DepartmentId");
 
+        // Show or hide the department field based on division selection
+        departmentField.style.display = divisionId ? "block" : "none";
+
+        // Clear previous department options
+        departmentSelect.innerHTML = '<option value="">Select a department</option>';
+
+        // Load departments if a division is selected
+        if (divisionId) {
+            fetch(`/Document/GetDepartmentsByDivision?divisionId=${divisionId}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(department => {
+                        var option = document.createElement("option");
+                        option.value = department.id;
+                        option.text = department.name;
+                        departmentSelect.add(option);
+                    });
+                })
+                .catch(error => console.error('Error loading departments:', error));
+        }
+    }
+
+    function closeDivisionDepartmentPopup() {
+        document.getElementById("divisionDepartmentPopup").style.display = "none";
+    }
+
+    function loadDepartments() {
+        const divisionId = document.getElementById("DivisionId").value;
+        const departmentSelect = document.getElementById("DepartmentId");
+
+        departmentSelect.innerHTML = '<option value="">Select a department</option>';
+
+        if (divisionId) {
+            const departments = @Html.Raw(JsonSerializer.Serialize(Model.Departments));
+            const filteredDepartments = departments.filter(d => d.DivisionId === divisionId);
+
+            filteredDepartments.forEach(department => {
+                departmentSelect.innerHTML += `<option value="${department.Id}">${department.Name}</option>`;
+            });
+        }
+    }
 </script>
 
+<style>
+    /* Styles for popup */
+    .popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .popup-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        width: 300px;
+        text-align: center;
+    }
+
+    .field-group {
+        margin-bottom: 15px;
+    }
+</style>

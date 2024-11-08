@@ -9,10 +9,8 @@ namespace DMS_Hino.ViewModel
         public List<CategoryViewModel> Categories { get; set; }
         public string CategoryTitle { get; set; }
 
-        // Property untuk menyimpan daftar dokumen
         public List<Document> Documents { get; set; } = new List<Document>();
 
-        // Fields yang dibutuhkan untuk menambah atau mengedit dokumen
         public IFormFile DocumentItem { get; set; }
         public string Number { get; set; }
         public string Name { get; set; }
@@ -29,11 +27,12 @@ namespace DMS_Hino.ViewModel
         public DateTime? CreatedAt { get; set; }
         public DateTime? ModifiedAt { get; set; }
 
-        // Dropdown lists
-        //public List<Category> Categories { get; set; } = new List<Category>();
         public List<User> Users { get; set; } = new List<User>();
 
-        public List<Division> Divisions { get; set; } = new List<Division>();
+        //public List<Division> Divisions { get; set; } = new List<Division>();
+        public List<Division> Divisions { get; set; }
+        public List<Department> Departments { get; set; }
+        public DivisionDepartmentViewModel DivisionDepartmentViewModel { get; set; }
     }
 
 }
