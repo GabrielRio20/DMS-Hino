@@ -1,0 +1,195 @@
+﻿@model List<DMS_Hino.Models.Category>
+
+<div class="container">
+    <h3 class="mb-4">Category List</h3>
+
+    <!-- Kontainer utama untuk daftar kategori -->
+    <div id="category-list" class="list-group">
+        @{
+            // Menampilkan kategori induk (ParentId == null)
+            foreach (var category in Model.Where(c => c.ParentId == null))
+            {
+                RenderCategoryItem(category, Model);
+            }
+        }
+    </div>
+
+    <!-- Tombol untuk membuka modal tambah kategori -->
+    <button class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Add Category</button>
+
+    <!-- Modal untuk tambah kategori -->
+    <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCategoryForm">
+                        <div class="mb-3">
+                            <label for="categoryName" class="form-label">Category Name</label>
+                            <input type="text" class="form-control" id="categoryName" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="parentCategory" class="form-label">Parent Category (Optional)</label>
+                            <select class="form-select" id="parentCategory" name="parentId">
+                                <option value="">-- No Parent --</option>
+                                @foreach (var cat in Model)
+                                {
+                                    <option value="@cat.Id">@cat.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Toggle function for categories
+            $('#category-list').on('click', '.toggle-subcategory', function () {
+                var icon = $(this).find('.toggle-icon');
+                icon.toggleClass('fa-caret-right fa-caret-down');
+                $(this).closest('.list-group-item').find('> .subcategory-list').slideToggle();
+            });
+
+            // Add category form submission
+            $('#addCategoryForm').on('submit', function (e) {
+                e.preventDefault();
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    url: '@Url.Action("AddCategory", "Document")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            // Add the new category to the list without reloading
+                            addCategoryToList(response.category);
+                            alert(response.message);
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        alert("An error occurred while adding the category.");
+                    }
+                });
+            });
+
+            // Edit category function
+            $('#category-list').on('click', '.edit-category-btn', function () {
+                var categoryId = $(this).data('category-id');
+                var newCategoryName = prompt("Enter new category name:");
+                if (newCategoryName) {
+                    $.ajax({
+                        url: '@Url.Action("EditCategory", "Document")',
+                        type: 'POST',
+                        data: { id: categoryId, name: newCategoryName },
+                        success: function (response) {
+                            if (response.success) {
+                                updateCategoryInList(categoryId, newCategoryName);
+                                alert(response.message);
+                            } else {
+                                alert(response.message);
+                            }
+                        },
+                        error: function () {
+                            alert("An error occurred while editing the category.");
+                        }
+                    });
+                }
+            });
+
+            // Delete category function
+            $('#category-list').on('click', '.delete-category-btn', function () {
+                var categoryId = $(this).data('category-id');
+                if (confirm("Are you sure you want to delete this category?")) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteCategory", "Document")',
+                        type: 'POST',
+                        data: { id: categoryId },
+                        success: function (response) {
+                            if (response.success) {
+                                removeCategoryFromList(categoryId);
+                                alert(response.message);
+                            } else {
+                                alert(response.message);
+                            }
+                        },
+                        error: function () {
+                            alert("An error occurred while deleting the category.");
+                        }
+                    });
+                }
+            });
+
+            // Function to add a new category to the list
+            function addCategoryToList(category) {
+                var categoryItem = `
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="toggle-subcategory" style="cursor: pointer;">
+                                <i class="fas fa-caret-right toggle-icon me-2"></i>${category.name}
+                            </span>
+                            <div>
+                                <button class="btn btn-primary btn-sm edit-category-btn" data-category-id="${category.id}">Edit</button>
+                                <button class="btn btn-danger btn-sm delete-category-btn" data-category-id="${category.id}">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                $('#category-list').append(categoryItem);
+            }
+
+            // Function to update a category in the list
+            function updateCategoryInList(categoryId, newCategoryName) {
+                var categoryItem = $(`#category-list .edit-category-btn[data-category-id='${categoryId}']`).closest('.list-group-item');
+                categoryItem.find('span').contents().filter(function() {
+                    return this.nodeType === 3; // Node.TEXT_NODE
+                }).first().replaceWith(newCategoryName);
+            }
+
+            // Function to remove a category from the list
+            function removeCategoryFromList(categoryId) {
+                $(`#category-list .delete-category-btn[data-category-id='${categoryId}']`).closest('.list-group-item').remove();
+            }
+        });
+    </script>
+}
+
+@functions {
+    // Fungsi untuk merender kategori dengan tampilan bertingkat dan expandable
+    private void RenderCategoryItem(Category category, List<Category> allCategories)
+    {
+        <div class="list-group-item">
+            <!-- Nama kategori dengan ikon expand/collapse -->
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="toggle-subcategory" style="cursor: pointer;">
+                    <i class="fas fa-caret-right toggle-icon me-2"></i>@category.Name
+                </span>
+                <div>
+                    <button class="btn btn-primary btn-sm edit-category-btn" data-category-id="@category.Id">Edit</button>
+                    <button class="btn btn-danger btn-sm delete-category-btn" data-category-id="@category.Id">Delete</button>
+                </div>
+            </div>
+
+            <!-- Daftar subkategori bertingkat, hanya ditampilkan jika ada subkategori -->
+            @if (allCategories.Any(c => c.ParentId == category.Id))
+            {
+                <div class="subcategory-list ms-4 mt-2" style="display: none;">
+                    @foreach (var subCategory in allCategories.Where(c => c.ParentId == category.Id))
+                    {
+                        RenderCategoryItem(subCategory, allCategories);
+                    }
+                </div>
+            }
+        </div>
+    }
+}

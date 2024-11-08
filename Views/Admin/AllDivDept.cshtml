@@ -4,11 +4,10 @@
     ViewData["Title"] = "All Divisions and Departments";
 }
 
-
-<h2>@ViewData["Title"]</h2>
+<h2 class="mb-4">@ViewData["Title"]</h2>
 
 <div class="mb-3">
-    <a asp-action="AddDivDept" asp-controller="Admin" class="btn btn-primary">Add Division & Department</a>
+    <a asp-action="AddDivDept" asp-controller="Admin" class="btn btn-success">Add Division & Department</a>
 </div>
 
 <div class="container">
@@ -17,26 +16,33 @@
     <div id="division-list">
         @foreach (var division in Model.Divisions)
         {
-            <div class="division-item p-3 mb-3 border rounded" style="background-color: powderblue; color: #ffffff;">
+            <div class="division-item p-4 mb-3 border rounded shadow-sm" style="background-color: #e8f4f8;">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="division-name d-flex align-items-center">
-                        <span id="division-name-@division.Id" class="fw-bold fs-5 me-2">@division.Name</span>
+                        <span id="division-name-@division.Id" class="fw-bold fs-5 me-2 text-primary">@division.Name</span>
                         <input type="text" id="edit-division-input-@division.Id" class="form-control d-none" value="@division.Name" />
                     </div>
                     <div class="btn-group">
-                        <button class="btn btn-outline-light btn-sm edit-division-btn" data-division-id="@division.Id">Edit</button>
-                        <button class="btn btn-outline-primary btn-sm save-division-btn d-none" data-division-id="@division.Id">Save</button>
-                        <button class="btn btn-outline-danger btn-sm cancel-division-btn d-none" data-division-id="@division.Id">Cancel</button>
+                        <button class="btn btn-outline-primary btn-sm edit-division-btn" data-division-id="@division.Id">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-outline-success btn-sm save-division-btn d-none" data-division-id="@division.Id">
+                            <i class="bi bi-check-lg"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm cancel-division-btn d-none" data-division-id="@division.Id">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
                     </div>
                 </div>
 
                 <!-- Department List -->
                 <div class="department-list mt-3">
                     <h5 class="mb-2">Departments</h5>
-                    <ul class="list-group list-group-flush">
+                    <ul class="list-group list-group-flush" id="department-list-@division.Id">
                         @foreach (var department in Model.Departments.Where(d => d.Division.Id == division.Id))
                         {
-                            <li class="list-group-item d-flex justify-content-between align-items-center" style="background-color: #ffffff; font-size: 0.9rem;">
+                            <li class="list-group-item d-flex justify-content-between align-items-center department-item"
+                                data-department-id="@department.Id" style="background-color: #ffffff; font-size: 0.9rem;">
                                 <div class="department-name d-flex align-items-center">
                                     <span id="department-name-@department.Id">@department.Name</span>
                                     <input type="text" id="edit-department-input-@department.Id" class="form-control d-none" value="@department.Name" />
@@ -50,9 +56,7 @@
                         }
                     </ul>
                     <!-- Add Department Button -->
-                    <button class="btn btn-sm btn-outline-secondary mt-3 add-department-btn" data-division-id="@division.Id">
-                        Add Department
-                    </button>
+                    <button class="btn btn-sm btn-outline-secondary mt-3 add-department-btn" data-division-id="@division.Id">Add Department</button>
                 </div>
             </div>
         }
@@ -61,7 +65,7 @@
 
 @section Scripts {
     <script>
-        $(document).ready(function () {
+        $(document).ready(function () { 
             // Edit Division Name
             $('.edit-division-btn').on('click', function () {
                 var divisionId = $(this).data('division-id');
@@ -75,10 +79,22 @@
             $('.save-division-btn').on('click', function () {
                 var divisionId = $(this).data('division-id');
                 var newName = $('#edit-division-input-' + divisionId).val();
-                $('#division-name-' + divisionId).text(newName).show();
-                $('#edit-division-input-' + divisionId).addClass('d-none');
-                $(this).siblings('.edit-division-btn').removeClass('d-none');
-                $(this).addClass('d-none').siblings('.cancel-division-btn').addClass('d-none');
+
+                // Send AJAX request to update division name
+                $.ajax({
+                    url: '/Admin/UpdateDivisionName',
+                    type: 'POST',
+                    data: { id: divisionId, newName: newName },
+                    success: function () {
+                        $('#division-name-' + divisionId).text(newName).show();
+                        $('#edit-division-input-' + divisionId).addClass('d-none');
+                        $(this).siblings('.edit-division-btn').removeClass('d-none');
+                        $(this).addClass('d-none').siblings('.cancel-division-btn').addClass('d-none');
+                    },
+                    error: function () {
+                        alert("Failed to update division name.");
+                    }
+                });
             });
 
             // Cancel Division Edit
@@ -103,10 +119,22 @@
             $('.save-department-btn').on('click', function () {
                 var departmentId = $(this).data('department-id');
                 var newName = $('#edit-department-input-' + departmentId).val();
-                $('#department-name-' + departmentId).text(newName).show();
-                $('#edit-department-input-' + departmentId).addClass('d-none');
-                $(this).siblings('.edit-department-btn').removeClass('d-none');
-                $(this).addClass('d-none').siblings('.cancel-department-btn').addClass('d-none');
+
+                // Send AJAX request to update department name
+                $.ajax({
+                    url: '/Admin/UpdateDepartmentName',
+                    type: 'POST',
+                    data: { id: departmentId, newName: newName },
+                    success: function () {
+                        $('#department-name-' + departmentId).text(newName).show();
+                        $('#edit-department-input-' + departmentId).addClass('d-none');
+                        $(this).siblings('.edit-department-btn').removeClass('d-none');
+                        $(this).addClass('d-none').siblings('.cancel-department-btn').addClass('d-none');
+                    },
+                    error: function () {
+                        alert("Failed to update department name.");
+                    }
+                });
             });
 
             // Cancel Department Edit
@@ -117,17 +145,83 @@
                 $(this).siblings('.edit-department-btn').removeClass('d-none');
                 $(this).addClass('d-none').siblings('.save-department-btn').addClass('d-none');
             });
+
+            // Handle Add Department button click
+            $('.add-department-btn').on('click', function () {
+                var divisionId = $(this).data('division-id');
+                var departmentList = $('#department-list-' + divisionId);
+
+                // Create a new department item with the same style as existing departments
+                var newDepartmentItem = $(`
+                <li class="list-group-item d-flex justify-content-between align-items-center department-item new-department-item"
+                    style="background-color: #ffffff; font-size: 0.9rem;">
+                    <div class="department-name d-flex align-items-center">
+                        <input type="text" id="new-department-input" class="form-control me-2" placeholder="Enter department name" />
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-primary btn-sm save-new-department-btn" data-division-id="${divisionId}">Save</button>
+                        <button class="btn btn-outline-danger btn-sm cancel-new-department-btn">Cancel</button>
+                    </div>
+                </li>
+            `);
+
+                // Append the new department item to the department list
+                departmentList.append(newDepartmentItem);
+            });
+
+            // Use event delegation for dynamically added buttons
+            $(document).on('click', '.save-new-department-btn', function () {
+                var departmentName = $('#new-department-input').val();
+                var divisionId = $(this).data('division-id');
+
+                if (departmentName.trim() === "") {
+                    alert("Department name cannot be empty.");
+                    return;
+                }
+
+                // Log data to check
+                console.log("divisionId:", divisionId, "departmentName:", departmentName);
+
+                // AJAX request to add the department
+                $.ajax({
+                    url: '/Admin/AddDepartmentLive',
+                    type: 'POST',
+                    data: { divisionId: divisionId, departmentName: departmentName },
+                    success: function (result) {
+                        if (result.success) {
+                            // Create HTML for the new department
+                            var newDepartmentHtml = `
+                            <li class="list-group-item d-flex justify-content-between align-items-center department-item"
+                                data-department-id="${result.departmentId}" style="background-color: #ffffff; font-size: 0.9rem;">
+                                <div class="department-name d-flex align-items-center">
+                                    <span id="department-name-${result.departmentId}">${result.departmentName}</span>
+                                    <input type="text" id="edit-department-input-${result.departmentId}" class="form-control d-none" value="${result.departmentName}" />
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-outline-secondary btn-sm edit-department-btn" data-department-id="${result.departmentId}">Edit</button>
+                                    <button class="btn btn-outline-primary btn-sm save-department-btn d-none" data-department-id="${result.departmentId}">Save</button>
+                                    <button class="btn btn-outline-danger btn-sm cancel-department-btn d-none" data-department-id="${result.departmentId}">Cancel</button>
+                                </div>
+                            </li>`;
+
+                            // Append the new department and remove the input form
+                            $('#department-list-' + divisionId).append(newDepartmentHtml);
+                            $('.new-department-item').remove();
+                        } else {
+                            alert("Failed to add department: " + result.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", xhr.responseText);
+                        alert("Failed to add department: " + xhr.responseText);
+                    }
+                });
+            });
+
+            // Handle Cancel button click for the new department
+            $(document).on('click', '.cancel-new-department-btn', function () {
+                $('.new-department-item').remove();
+            });
         });
     </script>
 }
-
-
-
-
-
-
-
-
-
-          
-

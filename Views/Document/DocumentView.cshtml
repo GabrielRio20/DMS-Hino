@@ -1,52 +1,90 @@
 ﻿@model DMS_Hino.ViewModel.DocumentViewModel
 
 <div class="d-flex justify-content-between mb-3">
-    <!-- Add Document Button (Top Left) -->
     <div class="text-right mb-3">
         <a href="/Document/DocumentAddView" class="btn btn-success ajax-link">Add Document</a>
     </div>
-    <!-- Search Bar (Top Center) -->
     <div class="w-50">
         <input type="text" id="searchBar" class="form-control" placeholder="Search for documents..." onkeyup="searchDocuments()">
     </div>
-
-    <!-- View Switcher (Top Right) -->
     <div>
         <button class="btn btn-secondary" id="toggleViewButton" onclick="toggleView()">Switch to List View</button>
     </div>
 </div>
 
+<!-- Category Tabs -->
+@* <div class="category-tabs mb-3">
+    <h4>Categories</h4> 
+    <ul class="nav nav-tabs">
+        @foreach (var category in Model.Categories)
+        {
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#collapse-@category.Id" aria-expanded="false" aria-controls="collapse-@category.Id">
+                    @category.Name
+                </a>
+                <div class="collapse" id="collapse-@category.Id">
+                    <ul class="list-group">
+                        @foreach (var child in category.Children)
+                        {
+                            <li class="list-group-item">
+                                <a class="child-category-link" href="/Document/PublicDocument/@child.Id">@child.Name</a>
+                                <ul>
+                                    @if (child.Documents != null && child.Documents.Any())
+                                    {
+                                        @foreach (var document in child.Documents)
+                                        {
+                                            <li>@document.Name</li> <!-- Tampilkan nama dokumen di dalam child category -->
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li>No documents available.</li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </li>
+        }
+    </ul>
+</div> *@
+
+
 <!-- Document Display Area -->
 <div id="documentContainer" class="grid-view">
     @if (Model.Documents != null && Model.Documents.Any())
     {
-        @foreach (var document in Model.Documents)
+        foreach (var document in Model.Documents)
         {
-            var fileExtension = System.IO.Path.GetExtension(document.DocumentItem).ToLower(); // Get the file extension
-
+            var fileExtension = System.IO.Path.GetExtension(document.DocumentItem).ToLower();
             <div class="document-item" onclick="showDocumentDetail('@document.Id')">
                 <div class="document-icon">
                     @switch (fileExtension)
                     {
                         case ".pdf":
-                            <i class="bi bi-file-earmark-pdf" style="color:red;"></i> <!-- PDF icon -->
+                            <i class="bi bi-file-earmark-pdf" style="color:red;"></i>
                             break;
                         case ".doc":
                         case ".docx":
-                            <i class="bi bi-file-earmark-word" style="color:darkblue;"></i> <!-- Word icon -->
+                            <i class="bi bi-file-earmark-word" style="color:darkblue;"></i>
                             break;
                         case ".xls":
                         case ".xlsx":
-                            <i class="bi bi-file-earmark-excel" style="color:forestgreen;"></i> <!-- Excel icon -->
+                            <i class="bi bi-file-earmark-excel" style="color:forestgreen;"></i>
+                            break;
+                        case ".jpg":
+                        case ".jpeg":
+                        case ".png":
+                            <i class="bi bi-file-image" style="color:darkkhaki;"></i>
                             break;
                         default:
-                            <i class="bi bi-file-earmark"></i> <!-- Default icon -->
+                            <i class="bi bi-file-earmark"></i>
                             break;
                     }
                 </div>
                 <div class="document-info">
                     <span>@document.Name</span>
-                    <span>@document.CreatedAt.ToShortDateString()</span>
                 </div>
             </div>
         }
@@ -57,18 +95,12 @@
     }
 </div>
 
-<!-- Sidebar for Document Details -->
 <div id="documentDetailSidebar" class="document-sidebar">
-    <!-- Close Button (Left Top) -->
     <button onclick="closeSidebar()" class="close-sidebar-btn">&gt;</button>
-
     <div id="documentDetailContent">
         <!-- Content will be loaded dynamically here -->
     </div>
-
 </div>
-
-
 
 <script>
     function toggleView() {
@@ -102,35 +134,13 @@
         });
     }
 
-    @* function showDocumentDetail(documentId) {
-        $.ajax({
-            url: '/Document/GetDocumentDetail', // Ensure this URL points to the correct controller action
-            type: 'GET',
-            data: { id: documentId },
-            success: function (result) {
-                // Display the returned HTML (your view content) inside the sidebar
-                $('#documentDetailContent').html(result);
-
-                // Open the sidebar
-                $('#documentDetailSidebar').addClass('open');
-                $('#documentContainer').addClass('sidebar-open');
-            },
-            error: function (xhr, status, error) {
-                console.error("Error loading document details:", error);
-            }
-        });
-    } *@
-
     function showDocumentDetail(documentId) {
         $.ajax({
             url: '/Document/GetDocumentDetail',
             type: 'GET',
             data: { id: documentId },
             success: function (result) {
-                // Memuat konten detail dokumen dan preview
                 $('#documentDetailContent').html(result);
-
-                // Membuka sidebar
                 $('#documentDetailSidebar').addClass('open');
                 $('#documentContainer').addClass('sidebar-open');
             },
@@ -140,9 +150,7 @@
         });
     }
 
-
     function closeSidebar() {
-        // Close the sidebar
         $('#documentDetailSidebar').removeClass('open');
         $('#documentContainer').removeClass('sidebar-open');
     }

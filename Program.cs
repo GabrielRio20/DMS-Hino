@@ -1,7 +1,10 @@
 using DMS_Hino.Data;
+using DMS_Hino.Service;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<DocumentService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

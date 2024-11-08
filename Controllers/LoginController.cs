@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -60,7 +61,7 @@ public class LoginController : Controller
         // Redirect to the default page based on user role
         if (user.Role == "Admin")
         {
-            return RedirectToAction("AllUsersView", "Admin");
+            return RedirectToAction("PublicDocument", "Document");
         }
         else if (user.Role == "User")
         {
@@ -78,4 +79,6 @@ public class LoginController : Controller
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("LoginPage");
     }
+
+    
 }

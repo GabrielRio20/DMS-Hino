@@ -1,0 +1,109 @@
+﻿
+
+<div class="container">
+    <h2>Document Management Dashboard</h2>
+
+    <!-- Tabs for Dashboard Sections -->
+    <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button" role="tab">Upload Document</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">Pending Approvals</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="shared-tab" data-bs-toggle="tab" data-bs-target="#shared" type="button" role="tab">Shared Documents</button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content mt-3" id="dashboardTabContent">
+        <!-- Upload Document Tab -->
+        <div class="tab-pane fade show active" id="upload" role="tabpanel">
+            <h4>Upload Document</h4>
+            <form id="uploadForm" method="post" enctype="multipart/form-data" action="@Url.Action("UploadDocument", "Document")">
+                <div class="mb-3">
+                    <label for="documentName" class="form-label">Document Name</label>
+                    <input type="text" class="form-control" id="documentName" name="documentName" required>
+                </div>
+                <div class="mb-3">
+                    <label for="documentFile" class="form-label">File (PDF only)</label>
+                    <input type="file" class="form-control" id="documentFile" name="documentFile" accept="application/pdf" required>
+                </div>
+                <div class="mb-3">
+                    <label for="department" class="form-label">Select Department</label>
+                    <select class="form-select" id="department" name="department">
+                        <!-- Populate with departments from your model -->
+                        <option value="1">Finance</option>
+                        <option value="2">HR</option>
+                        <!-- Add more options as needed -->
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="approver" class="form-label">Set Approver</label>
+                    <select class="form-select" id="approver" name="approver">
+                        <!-- Populate with approvers from your model -->
+                        <option value="1">Manager A</option>
+                        <option value="2">Manager B</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+
+        <!-- Pending Approvals Tab -->
+        <div class="tab-pane fade" id="pending" role="tabpanel">
+            <h4>Pending Approvals</h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Document Name</th>
+                        <th>Department</th>
+                        <th>Approval Stage</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample Data - Populate this dynamically -->
+                    <tr>
+                        <td>Annual Report</td>
+                        <td>Finance</td>
+                        <td><span class="badge bg-warning">Pending</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-secondary">Preview</button>
+                            <button class="btn btn-sm btn-success">Approve</button>
+                            <button class="btn btn-sm btn-danger">Reject</button>
+                            <button class="btn btn-sm btn-info">Share</button>
+                        </td>
+                    </tr>
+                    <!-- Repeat for each pending approval -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Shared Documents Tab -->
+        <div class="tab-pane fade" id="shared" role="tabpanel">
+            <h4>Shared Documents</h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Document Name</th>
+                        <th>Department</th>
+                        <th>Access Level</th>
+                        <th>Approval Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample Data - Populate this dynamically -->
+                    <tr>
+                        <td>Policy Document</td>
+                        <td>HR</td>
+                        <td><span class="badge bg-primary">Preview Only</span></td>
+                        <td><span class="badge bg-success">Approved</span></td>
+                    </tr>
+                    <!-- Repeat for each shared document -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

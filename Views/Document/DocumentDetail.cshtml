@@ -10,73 +10,79 @@
         </div>
     </div>
 
-    <!-- Form untuk mengirim data ke controller -->
     <form id="edit-document-form" method="post" action="@Url.Action("EditDocument", "Document")" enctype="multipart/form-data">
-        <!-- Gunakan input type="hidden" untuk mengirimkan DocumentId -->
+
         <input type="hidden" name="DocumentId" value="@Model.Id" />
 
-        <!-- Document Title, editable in edit mode -->
         <h1 class="document-title">
             <span id="document-name" name="Name" value="@Model.Name">@Model.Name</span>
         </h1>
 
-        <!-- Container for the layout with two columns -->
         <div class="document-detail-container">
-            <!-- Left column: Document preview -->
             <div class="document-preview-large">
                 @{
                     var fileExtension = System.IO.Path.GetExtension(Model.DocumentItem).ToLower();
                 }
 
-                @switch (fileExtension)
-                {
-                    case ".pdf":
-                        <embed src="@Url.Content("~/documents/" + Model.DocumentItem)" type="application/pdf" width="100%" height="400px" />
-                        break;
-                    case ".jpg":
-                    case ".jpeg":
-                    case ".png":
-                    case ".gif":
-                        <img src="@Url.Content("~/documents/" + Model.DocumentItem)" alt="@Model.Name" class="document-image-preview" />
-                        break;
-                    default:
-                        <p>Preview not available. <a href="@Url.Content("~/documents/" + Model.DocumentItem)" target="_blank">Download</a> to view.</p>
-                        break;
-                }
+                <div id="document-preview">
+                    @switch (fileExtension)
+                    {
+                        case ".pdf":
+                            <embed src="@Url.Content("~/documents/" + Model.DocumentItem)" type="application/pdf" width="100%" height="400px" />
+                            break;
+                        case ".jpg":
+                        case ".jpeg":
+                        case ".png":
+                        case ".gif":
+                            <img src="@Url.Content("~/documents/" + Model.DocumentItem)" alt="@Model.Name" class="document-image-preview" />
+                            break;
+                        default:
+                            <p>Preview not available. <a href="@Url.Content("~/documents/" + Model.DocumentItem)" target="_blank">Download</a> to view.</p>
+                            break;
+                    }
+                </div>
 
-                <!-- Input for changing the document file, shown only in edit mode -->
                 <div id="file-upload" style="display: none;">
-                    <input type="file" id="document-file" name="DocumentFile" />
+                    <input type="file" id="document-file" name="DocumentFile" onchange="previewNewDocument()" />
+                    <p>Upload a new document to replace the existing one.</p>
                 </div>
             </div>
 
-            <!-- Right column: Document details -->
             <div class="document-info-detail">
                 <div class="document-info">
-                    <p><strong>Document Number:</strong> 
+                    <p>
+                        <strong>Document Number:</strong>
                         <span id="document-number" name="Number" value="@Model.Number">@Model.Number</span>
                     </p>
                     <p><strong>Document Version:</strong> <span id="document-version" name="VersionName" value="@Model.VersionName">@Model.VersionName</span></p>
-                    <p><strong>Released Date:</strong> <span id="document-date" name="ReleasedDate" value="@Model.ReleasedDate">@Model.ReleasedDate.ToShortDateString()</span></p>
+                    <p>
+                        <strong>Released Date:</strong>
+                        <span id="document-date" name="ReleasedDate"
+                              value="@Model.ReleasedDate.ToString("yyyy-MM-dd")">
+                            @Model.ReleasedDate.ToShortDateString()
+                        </span>
+                    </p>
                     <p><strong>Tag:</str> <span id="document-tag" name="Tag" value="@Model.Tag">@Model.Tag</span></p>
                     <p><strong>Location:</strong> <span id="document-location" name="Location" value="@Model.Location">@Model.Location</span></p>
+                    <p>
+                        <strong>Expiration Date:</strong>
+                        <span id="document-exp" name="ExpDate"
+                              value="@Model.ExpDate?.ToString("yyyy-MM-dd")">
+                            @Model.ExpDate?.ToShortDateString()
+                        </span>
+                    </p>
 
-                    <!-- Dropdown for category, shown in edit mode -->
                     <p>
                         <strong>Category:</strong>
                         <span id="document-category">@Model.Category.Name</span>
                     </p>
-                </div>
-
-                <div class="back-to-list">
-                    <a href="@Url.Action("PublicDocument", "Document")">Back to Document List</a>
                 </div>
             </div>
         </div>
     </form>
 </div>
 
-<!-- JavaScript for Edit Mode -->
+<!-- JavaScript for Edit Mode and Document Preview -->
 <script>
     let initialValues = {};
 
@@ -87,10 +93,11 @@
         initialValues['name'] = document.getElementById('document-name').innerText;
         initialValues['number'] = document.getElementById('document-number').innerText;
         initialValues['version'] = document.getElementById('document-version').innerText;
-        initialValues['date'] = document.getElementById('document-date').innerText;
+        initialValues['date'] = document.getElementById('document-date').getAttribute('value'); // Correct date format
         initialValues['tag'] = document.getElementById('document-tag').innerText;
         initialValues['location'] = document.getElementById('document-location').innerText;
         initialValues['category'] = document.getElementById('document-category').innerText;
+        initialValues['exp'] = document.getElementById('document-exp').getAttribute('value'); // Correct date format
 
         // Replace document name with an input field
         document.getElementById('document-name').outerHTML = `<input type="text" id="input-name" name="Name" value="${initialValues['name']}" />`;
@@ -101,18 +108,18 @@
         document.getElementById('document-date').outerHTML = `<input type="date" id="input-date" name="ReleasedDate" value="${initialValues['date']}" />`;
         document.getElementById('document-tag').outerHTML = `<input type="text" id="input-tag" name="Tag" value="${initialValues['tag']}" />`;
         document.getElementById('document-location').outerHTML = `<input type="text" id="input-location" name="Location" value="${initialValues['location']}" />`;
+        document.getElementById('document-exp').outerHTML = `<input type="date" id="input-exp" name="ExpDate" value="${initialValues['exp']}" />`;
 
         // Build category options from Razor (generated by server)
         let categoryOptions = `
-        @foreach (var category in ViewBag.Categories)
-        {
-            <option value="@category.Id">@category.Name</option>
-        }
+    @foreach (var category in ViewBag.Categories)
+    {
+                    <option value="@category.Id">@category.Name</option>
+    }
         `;
 
         // Replace category name with a dropdown select
-        document.getElementById('document-category').outerHTML =
-            `<select id="input-category" name="CategoryId">${categoryOptions}</select>`;
+        document.getElementById('document-category').outerHTML = `<select id="input-category" name="CategoryId">${categoryOptions}</select>`;
 
         // Set the selected option to match the current category
         document.getElementById('input-category').value = '@Model.CategoryId';
@@ -125,39 +132,30 @@
     }
 
 
-    function saveChanges() {
-        console.log("Saving changes"); // Debugging log
+    function previewNewDocument() {
+        const fileInput = document.getElementById('document-file');
+        const previewContainer = document.getElementById('document-preview');
+        const file = fileInput.files[0];
 
-        // Get new values from inputs
-        let newValues = {
-            name: document.getElementById('input-name').value,
-            number: document.getElementById('input-number').value,
-            version: document.getElementById('input-version').value,
-            date: document.getElementById('input-date').value,
-            tag: document.getElementById('input-tag').value,
-            location: document.getElementById('input-location').value,
-            category: document.getElementById('input-category').options[document.getElementById('input-category').selectedIndex].text
-        };
+        if (file) {
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            const fileURL = URL.createObjectURL(file);
 
-        // Update display with new values
-        document.getElementById('document-name').innerText = newValues.name;
-        document.getElementById('document-number').innerText = newValues.number;
-        document.getElementById('document-version').innerText = newValues.version;
-        document.getElementById('document-date').innerText = newValues.date;
-        document.getElementById('document-tag').innerText = newValues.tag;
-        document.getElementById('document-location').innerText = newValues.location;
-        document.getElementById('document-category').innerText = newValues.category;
+            // Clear previous preview
+            previewContainer.innerHTML = '';
 
-        // Hide file upload and save/cancel buttons
-        document.getElementById('file-upload').style.display = 'none';
-        document.getElementById('edit-btn').style.display = 'inline-block';
-        document.getElementById('save-btn').style.display = 'none';
-        document.getElementById('cancel-btn').style.display = 'none';
+            if (fileExtension === 'pdf') {
+                previewContainer.innerHTML = `<embed src="${fileURL}" type="application/pdf" width="100%" height="400px" />`;
+            } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+                previewContainer.innerHTML = `<img src="${fileURL}" alt="Preview" class="document-image-preview" />`;
+            } else {
+                previewContainer.innerHTML = `<p>Preview not available. <a href="${fileURL}" target="_blank">Download</a> to view.</p>`;
+            }
+        }
     }
 
     function cancelEdit() {
-        console.log("Edit mode canceled"); 
+        console.log("Edit mode canceled");
         location.reload();
     }
-
 </script>

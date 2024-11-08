@@ -1,4 +1,7 @@
-﻿namespace DMS_Hino.Helpers
+﻿using DMS_Hino.Models;
+using DMS_Hino.ViewModel;
+
+namespace DMS_Hino.Helpers
 {
     public static class DocumentHelper
     {
@@ -22,6 +25,15 @@
             }
         }
 
-
+        public static CategoryViewModel MapToViewModel(Category category)
+        {
+            return new CategoryViewModel
+            {
+                Id = category.Id,
+                Name = category.Name,
+                ParentId = category.ParentId,
+                Children = category.Children?.Select(MapToViewModel).ToList() ?? new List<CategoryViewModel>()
+            };
+        }
     }
 }

@@ -1,0 +1,2 @@
+- pending approval : pembuat dan approver(based on department)
+- latest released (public dan masing2 dept) 5

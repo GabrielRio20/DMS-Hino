@@ -5,6 +5,9 @@ namespace DMS_Hino.ViewModel
     public class DocumentViewModel
     {
         public string Id { get; set; }
+        public string SelectedCategoryId { get; set; }
+        public List<CategoryViewModel> Categories { get; set; }
+        public string CategoryTitle { get; set; }
 
         // Property untuk menyimpan daftar dokumen
         public List<Document> Documents { get; set; } = new List<Document>();
@@ -27,8 +30,10 @@ namespace DMS_Hino.ViewModel
         public DateTime? ModifiedAt { get; set; }
 
         // Dropdown lists
-        public List<Category> Categories { get; set; } = new List<Category>();
+        //public List<Category> Categories { get; set; } = new List<Category>();
         public List<User> Users { get; set; } = new List<User>();
+
+        public List<Division> Divisions { get; set; } = new List<Division>();
     }
 
 }

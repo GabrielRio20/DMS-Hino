@@ -1,6 +1,9 @@
+using DMS_Hino.Data;
 using DMS_Hino.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace DMS_Hino.Controllers
@@ -8,11 +11,11 @@ namespace DMS_Hino.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        protected readonly DatabaseContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(DatabaseContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -30,18 +33,6 @@ namespace DMS_Hino.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        public IActionResult About()
-        {
-            ViewData["Title"] = "About";
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Title"] = "Contact";
-            return View();
         }
     }
 }

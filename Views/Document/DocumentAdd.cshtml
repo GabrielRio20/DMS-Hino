@@ -1,4 +1,8 @@
-﻿@model DMS_Hino.ViewModel.DocumentViewModel
+﻿@using System.Text.Json
+@using Microsoft.EntityFrameworkCore
+@using DMS_Hino.Data
+@model DMS_Hino.ViewModel.DocumentViewModel
+@inject DatabaseContext _context
 
 @{
     ViewData["Title"] = "Add Document";
@@ -10,6 +14,7 @@
     <div class="form-container">
         <!-- Left side: Drag and Drop area -->
         <div class="left-side">
+            <input type="hidden" id="CategoryId" name="CategoryId" value="@Model.SelectedCategoryId" />
             <label for="DocumentItem" class="upload-label">Upload Document</label>
             <div id="dropZone" class="upload-area" onclick="document.getElementById('DocumentItem').click()">
                 <!-- Preview Area (Initially hidden) -->
@@ -21,8 +26,8 @@
                 </div>
 
                 <!-- Default message when no file is uploaded -->
-                <p id="defaultUploadMessage">Drag & Drop file here or click to upload</p>
-                <input type="file" id="DocumentItem" name="DocumentItem" accept=".pdf, .docx, .txt, .xls, .xlsx" onchange="previewDocument(event)" style="display: none;">
+                <p id="defaultUploadMessage">Click to upload</p>
+                <input type="file" id="DocumentItem" name="DocumentItem" accept=".pdf, .docx, .doc, .txt, .xls, .xlsx, .ppt, .png, .jpeg, .jpg" onchange="previewDocument(event)" style="display: none;">
             </div>
 
             <div class="checkbox-container">
@@ -77,6 +82,11 @@
                 <input type="date" id="ReleasedDate" name="ReleasedDate">
             </div>
 
+            @* <div class="field-group">
+                <label for="ExpDate">Document Expired Date</label>
+                <input type="date" id="ExpDate" name="ExpDate">
+            </div> *@
+
             <div class="field-group">
                 <label for="Tag">Document Tag</label>
                 <input type="text" id="Tag" name="Tag">
@@ -87,26 +97,13 @@
                 <input type="text" id="Location" name="Location">
             </div>
 
-            <div class="field-group">
-                <label for="CategoryId">Document Category</label>
-                <select id="CategoryId" name="CategoryId" required>
-                    <option value="" disabled selected>Select a category</option>
-                    @foreach (var category in Model.Categories)
-                    {
-                        <option value="@category.Id">@category.Name</option>
-                    }
-                </select>
-            </div>
-
             <button type="submit" class="save-btn">Save</button>
         </div>
     </div>
 </form>
 
-
-
-
 <script>
+   
     function toggleExpirationFields() {
         var isChecked = document.getElementById("isExpiration").checked;
         var expirationFields = document.getElementById("expirationFields");
@@ -119,43 +116,53 @@
         const previewArea = document.getElementById('previewArea');
         const defaultUploadMessage = document.getElementById('defaultUploadMessage');
 
-        // Reset preview area
+        // Clear previous preview content
         previewArea.innerHTML = '';
 
         if (file) {
             const fileType = file.type;
             const fileUrl = URL.createObjectURL(file);
 
-            // Show preview area and hide default message
             previewContainer.style.display = 'block';
             defaultUploadMessage.style.display = 'none';
 
             if (fileType === 'application/pdf') {
-                // Preview PDF using <iframe>
+                // Preview PDF files
                 previewArea.innerHTML = `<iframe src="${fileUrl}" width="100%" height="200px"></iframe>`;
-            } else if (fileType === 'text/plain') {
-                // Preview text file by reading content
+            } else if (fileType.startsWith('image/')) {
+                // Preview images (JPEG, PNG, etc.)
+                previewArea.innerHTML = `<img src="${fileUrl}" alt="Document Preview" style="max-width:100%; height:auto;">`;
+            } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                // Preview .docx files using Mammoth.js
                 const reader = new FileReader();
-                reader.onload = function (e) {
-                    previewArea.innerHTML = `<pre>${e.target.result}</pre>`;
+                reader.onload = function (event) {
+                    mammoth.convertToHtml({ arrayBuffer: event.target.result })
+                        .then(result => {
+                            previewArea.innerHTML = `<div style="width:100%; height:200px; overflow:auto; border:1px solid #ccc; padding:10px;">${result.value}</div>`;
+                        })
+                        .catch(error => {
+                            previewArea.innerHTML = `<p>Error loading document: ${error.message}</p>`;
+                        });
                 };
-                reader.readAsText(file);
+                reader.readAsArrayBuffer(file);
             } else {
-                // For other file types like .docx, show a file name
-                previewArea.innerHTML = `<p>File uploaded: ${file.name}</p>`;
+                // Fallback for unsupported file types
+                previewArea.innerHTML = `<p>File uploaded: ${file.name}</p><p>Preview not available for this file type.</p>`;
             }
         }
     }
 
+    
     function removeFile() {
         const documentItemInput = document.getElementById('DocumentItem');
         const previewContainer = document.getElementById('previewContainer');
         const defaultUploadMessage = document.getElementById('defaultUploadMessage');
 
-        // Clear the file input and reset the preview
         documentItemInput.value = '';
         previewContainer.style.display = 'none';
         defaultUploadMessage.style.display = 'block';
     }
+
+
 </script>
 

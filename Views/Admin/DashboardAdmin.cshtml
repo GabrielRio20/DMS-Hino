@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<link href="~/css/dashboard.css" rel="stylesheet" asp-append-version="true" />
+
+<div class="container dashboard-container">
+    <div class="dashboard-header">
+        <h1>Dashboard</h1>
+    </div>
+
+    <div class="row">
+        <!-- Pending Approval Section -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Pending Approval <span class="badge badge-pending">3 Pending</span>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <span class="document-title">Dokumen Proyek A</span>
+                        <span class="department">Created by: User1</span>
+                        <span class="released-date">Approver: Dept Head 1</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="document-title">Dokumen Proyek B</span>
+                        <span class="department">Created by: User2</span>
+                        <span class="released-date">Approver: Dept Head 2</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="document-title">Dokumen Proyek C</span>
+                        <span class="department">Created by: User3</span>
+                        <span class="released-date">Approver: Dept Head 1</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Latest Released Section -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Latest Released Documents <span class="badge badge-released">5 Released</span>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <span class="document-title">Dokumen Publik 1</span>
+                        <span class="department">Public</span>
+                        <span class="released-date">Released on: 01 Nov 2024</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="document-title">Dokumen Departemen X</span>
+                        <span class="department">Departemen X</span>
+                        <span class="released-date">Released on: 02 Nov 2024</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="document-title">Dokumen Departemen Y</span>
+                        <span class="department">Departemen Y</span>
+                        <span class="released-date">Released on: 03 Nov 2024</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="document-title">Dokumen Departemen Z</span>
+                        <span class="department">Departemen Z</span>
+                        <span class="released-date">Released on: 04 Nov 2024</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="document-title">Dokumen Publik 2</span>
+                        <span class="department">Public</span>
+                        <span class="released-date">Released on: 05 Nov 2024</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,41 +1,73 @@
-﻿<!-- ======= Sidebar ======= -->
+﻿@using Microsoft.EntityFrameworkCore
+@* @model DMS_Hino.ViewModel.DocumentViewModel *@
+@using DMS_Hino.Data
+@using DMS_Hino.Helpers
+@inject DatabaseContext _context
+
+@{
+    var divisions = _context.Divisions
+        .Include(d => d.Departments)
+        .ToList();
+
+    var categories = _context.Categories
+        .Where(c => c.ParentId == null)
+        .Include(c => c.Children)
+        .ThenInclude(c => c.Children)
+        .ToList();
+
+    var listMenu = _context.Categories.ToList();
+
+    var categoryViewModels = categories.Select(c => DocumentHelper.MapToViewModel(c)).ToList();
+
+    @* Helper method to render categories with children *@
+    void RenderCategoryWithChildren(CategoryViewModel category)
+    {
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-toggle="collapse" href="#category-@category.Id" onclick="event.preventDefault()">
+                <i class="bi bi-folder"></i>
+                <span class="category-span" data-category-id="@category.Id" >@category.Name</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+
+            <ul id="category-@category.Id" class="nav-submenu collapse">
+                @foreach (var childCategory in category.Children)
+                {
+                    if (listMenu.Any(x => x.ParentId == childCategory.Id))
+                    {
+                        RenderCategoryWithChildren(childCategory);
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="javascript:void(0)" onclick="event.preventDefault()">
+                                <i class="bi bi-folder"></i>
+                                <span class="category-span" data-category-id="@childCategory.Id" onclick="setCategoryId(event, '@childCategory.Id')">@childCategory.Name</span>
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+        </li>
+    }
+}
+
+<!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
 
-        @* Check if the user is authenticated *@
         @if (User.Identity.IsAuthenticated)
         {
             @* ADMIN MENU *@
             if (User.IsInRole("Admin"))
             {
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="index.html">
+                    <a class="nav-link collapsed" href="/Admin/DashboardAdmin">
                         <i class="bi bi-grid"></i>
                         <span>Dashboard</span>
                     </a>
-                </li><!-- End Dashboard Nav -->
+                </li>
 
-                <li class="nav-heading">Pages</li>
-
-                <li class="nav-item">
-                    <a class="nav-link collapsed ajax-link" href="/Admin/AllUsersView">
-                        <i class="bi bi-person"></i>
-                        <span>Users</span>
-                    </a>
-                </li><!-- End All User Nav -->
-
-                @* <li class="nav-item">
-                    <a class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "AllUsers" ? "active" : "")" href="/Admin/AllUsersView">
-                        <i class="bi bi-person"></i> Manage Users
-                    </a>
-                </li> *@
-
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="/Admin/AllDivisionsAndDepartments">
-                        <i class="bi bi-question-circle"></i>
-                        <span>Division and Department</span>
-                    </a>
-                </li><!-- End Division and Department Page Nav -->
+                <li class="nav-heading">Documents</li>
 
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="/Document/PublicDocument">
@@ -44,7 +76,33 @@
                     </a>
                 </li>
 
-                <!-- End Division and Department Page Nav -->   
+                @foreach (var category in categoryViewModels)
+                {
+                    RenderCategoryWithChildren(category);
+                }
+
+                <li class="nav-heading">Admin Settings</li>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="/Document/AllCategory">
+                        <i class="bi bi-question-circle"></i>
+                        <span>Category</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed ajax-link" href="/Admin/AllUsersView">
+                        <i class="bi bi-person"></i>
+                        <span>Users</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="/Admin/AllDivisionsAndDepartments">
+                        <i class="bi bi-question-circle"></i>
+                        <span>Division and Department</span>
+                    </a>
+                </li>
             }
 
             @* USER MENU *@
@@ -67,12 +125,7 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="pages-contact.html">
-                        <i class="bi bi-envelope"></i>
-                        <span>Contact</span>
-                    </a>
-                </li>
+                @* Division and Department Links for Users *@
             }
         }
         else
@@ -83,14 +136,41 @@
                     <i class="bi bi-box-arrow-in-right"></i>
                     <span>Login</span>
                 </a>
-            </li><!-- End Login Nav -->
+            </li>
+
+            <!-- End Login Nav -->
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="/Account/Register">
                     <i class="bi bi-person-plus"></i>
                     <span>Register</span>
                 </a>
-            </li><!-- End Register Nav -->
+            </li>
+
+            <!-- End Register Nav -->
         }
     </ul>
 </aside><!-- End Sidebar -->
+
+<script>
+    document.querySelectorAll('.category-span').forEach(span => {
+        span.addEventListener('click', function (event) {
+            event.preventDefault(); 
+            const categoryId = this.getAttribute('data-category-id'); 
+
+            const categoryInput = document.getElementById('CategoryId');
+            if (categoryInput) {
+                categoryInput.value = categoryId; 
+            }
+
+            window.location.href = `/Document/CategoryPage?id=${categoryId}`;
+        });
+    });
+
+    function setCategoryId(event, categoryId) {
+        event.stopPropagation(); // Prevents event from bubbling to parent elements
+        console.log("Category ID selected:", categoryId);
+        // You can set the hidden input value here if needed
+        // document.getElementById("CategoryId").value = categoryId;
+    }
+</script>

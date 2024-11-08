@@ -1,0 +1,23 @@
+﻿@model List<DMS_Hino.Models.Division>
+
+@if (Model != null && Model.Any())
+{
+    foreach (var division in Model)
+    {
+        <li class="nav-item">
+            <a class="nav-link" href="#">
+                <i class="bi bi-diagram-3"></i> @division.Name
+            </a>
+            <ul class="submenu">
+                @foreach (var department in division.Departments)
+                {
+                    <li><a href="#">@department.Name</a></li>
+                }
+            </ul>
+        </li>
+    }
+}
+else
+{
+    <li>No divisions available.</li>
+}

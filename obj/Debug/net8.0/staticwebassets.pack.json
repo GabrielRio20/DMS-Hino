@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\DMS-Hino.bundle.scp.css"
     },
     {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\css\\dashboard.css",
+      "PackagePath": "staticwebassets\\css\\dashboard.css"
+    },
+    {
       "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\css\\document.css",
       "PackagePath": "staticwebassets\\css\\document.css"
     },
@@ -21,16 +25,36 @@
       "PackagePath": "staticwebassets\\css\\styles.css"
     },
     {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\00e977b6-0dd9-4d3b-8051-de77c31e8e21.txt",
+      "PackagePath": "staticwebassets\\documents\\00e977b6-0dd9-4d3b-8051-de77c31e8e21.txt"
+    },
+    {
       "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\0c10e0ab-6e48-4399-8793-26cc4eebe415.pdf",
       "PackagePath": "staticwebassets\\documents\\0c10e0ab-6e48-4399-8793-26cc4eebe415.pdf"
+    },
+    {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\0e8c5420-e824-420a-a0a4-17b73345408d.docx",
+      "PackagePath": "staticwebassets\\documents\\0e8c5420-e824-420a-a0a4-17b73345408d.docx"
+    },
+    {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\2472e72b-5422-489c-9c41-a7691843b155.txt",
+      "PackagePath": "staticwebassets\\documents\\2472e72b-5422-489c-9c41-a7691843b155.txt"
     },
     {
       "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\2adb2d4d-8525-4c6f-94ac-8dc5362a7292.pdf",
       "PackagePath": "staticwebassets\\documents\\2adb2d4d-8525-4c6f-94ac-8dc5362a7292.pdf"
     },
     {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\2baf9424-bd48-4d98-8505-004277abe165.png",
+      "PackagePath": "staticwebassets\\documents\\2baf9424-bd48-4d98-8505-004277abe165.png"
+    },
+    {
       "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\3472ab23-1456-49bb-8107-3108f0379efb.pdf",
       "PackagePath": "staticwebassets\\documents\\3472ab23-1456-49bb-8107-3108f0379efb.pdf"
+    },
+    {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\39c2e7af-3bdb-4a52-901a-069132e75116.pdf",
+      "PackagePath": "staticwebassets\\documents\\39c2e7af-3bdb-4a52-901a-069132e75116.pdf"
     },
     {
       "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\46188380-a0f3-461e-a4e6-f4e522f80261.pdf",
@@ -41,12 +65,68 @@
       "PackagePath": "staticwebassets\\documents\\46a3d25c-c2c1-4772-94eb-1e8a4f7e824c.pdf"
     },
     {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\69df76d0-ef35-45e2-8528-3f2ad1d26a60.txt",
+      "PackagePath": "staticwebassets\\documents\\69df76d0-ef35-45e2-8528-3f2ad1d26a60.txt"
+    },
+    {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\79f54aa5-11fb-44ec-a94d-245f4d869ab6.png",
+      "PackagePath": "staticwebassets\\documents\\79f54aa5-11fb-44ec-a94d-245f4d869ab6.png"
+    },
+    {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\8395e406-e9db-4dad-9446-ec986c4998d6.png",
+      "PackagePath": "staticwebassets\\documents\\8395e406-e9db-4dad-9446-ec986c4998d6.png"
+    },
+    {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\a62d9d80-9602-44c8-b2b6-c4ea19ed7f8d.pdf",
+      "PackagePath": "staticwebassets\\documents\\a62d9d80-9602-44c8-b2b6-c4ea19ed7f8d.pdf"
+    },
+    {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\af44a908-c319-42cb-92b2-dbb2d578d625.pdf",
+      "PackagePath": "staticwebassets\\documents\\af44a908-c319-42cb-92b2-dbb2d578d625.pdf"
+    },
+    {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\ba0b04d6-d708-435a-a164-249f636b8de1.pdf",
+      "PackagePath": "staticwebassets\\documents\\ba0b04d6-d708-435a-a164-249f636b8de1.pdf"
+    },
+    {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\becaaa5d-bb67-470b-9068-5d9500ef869b.xlsx",
+      "PackagePath": "staticwebassets\\documents\\becaaa5d-bb67-470b-9068-5d9500ef869b.xlsx"
+    },
+    {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\bfb717ad-0e34-4a01-9a5b-5c89b911f0a3.txt",
+      "PackagePath": "staticwebassets\\documents\\bfb717ad-0e34-4a01-9a5b-5c89b911f0a3.txt"
+    },
+    {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\c714e6ce-ebe2-471e-9f7f-669ccbc1ba6b.pdf",
+      "PackagePath": "staticwebassets\\documents\\c714e6ce-ebe2-471e-9f7f-669ccbc1ba6b.pdf"
+    },
+    {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\c868ec5e-c25e-4d37-8deb-b6d93ee6a852.txt",
+      "PackagePath": "staticwebassets\\documents\\c868ec5e-c25e-4d37-8deb-b6d93ee6a852.txt"
+    },
+    {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\c9e50eb2-f386-4397-b951-c5212a4c23b1.pdf",
+      "PackagePath": "staticwebassets\\documents\\c9e50eb2-f386-4397-b951-c5212a4c23b1.pdf"
+    },
+    {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\de69e967-07ad-4e93-a8f4-f82ccdb49933.txt",
+      "PackagePath": "staticwebassets\\documents\\de69e967-07ad-4e93-a8f4-f82ccdb49933.txt"
+    },
+    {
       "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\e367dedd-d1d4-420c-bf22-81745d4016d3.pdf",
       "PackagePath": "staticwebassets\\documents\\e367dedd-d1d4-420c-bf22-81745d4016d3.pdf"
     },
     {
       "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\ef6c3675-27c2-43d1-bf16-3a905e79ca6c.xlsx",
       "PackagePath": "staticwebassets\\documents\\ef6c3675-27c2-43d1-bf16-3a905e79ca6c.xlsx"
+    },
+    {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\f50c34c1-fd43-46bf-b34c-f8e19c650e61.png",
+      "PackagePath": "staticwebassets\\documents\\f50c34c1-fd43-46bf-b34c-f8e19c650e61.png"
+    },
+    {
+      "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\f6f1545e-fd6e-43da-bac1-ccc78e4a29de.xlsx",
+      "PackagePath": "staticwebassets\\documents\\f6f1545e-fd6e-43da-bac1-ccc78e4a29de.xlsx"
     },
     {
       "Id": "D:\\Repos\\DMS-Hino\\DMS-Hino\\wwwroot\\documents\\f99d753f-f0ed-4f09-bf2d-f04339b07153.pdf",

@@ -43,27 +43,53 @@
 
     <!-- Dropdown for Division -->
     <div class="form-group">
-        <label>Division:</label>
+        <label asp-for="DivisionId">Division:</label>
         <p id="divisionDisplay">@Model.Division?.Name</p>
-        <select asp-for="DivisionId" asp-items="@(new SelectList(Model.Divisions, "Id", "Name", Model.DivisionId))" class="form-control d-none" id="divisionDropdown">
+        <select asp-for="DivisionId" class="form-control d-none" id="divisionDropdown" required onchange="filterDepartments()">
             <option value="">Select Division</option>
+            @foreach (var division in Model.Divisions)
+            {
+                <option value="@division.Id"
+                        selected="@(Model.DivisionId == division.Id ? "selected" : "")">
+                    @division.Name
+                </option>
+            }
         </select>
     </div>
 
     <!-- Dropdown for Department -->
     <div class="form-group">
-        <label>Department:</label>
+        <label asp-for="DepartmentId">Department:</label>
         <p id="departmentDisplay">@Model.Department?.Name</p>
-        <select asp-for="DepartmentId" asp-items="@(new SelectList(Model.Departments, "Id", "Name", Model.DepartmentId))" class="form-control d-none" id="departmentDropdown">
+        <select asp-for="DepartmentId" class="form-control d-none" id="departmentDropdown" required>
             <option value="">Select Department</option>
+            @foreach (var department in Model.Departments)
+            {
+                <option value="@department.Id" data-division-id="@department.DivisionId"
+                        selected="@(Model.DepartmentId == department.Id ? "selected" : "")">
+                    @department.Name
+                </option>
+            }
         </select>
     </div>
-
 </form>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Set initial selections
+        setInitialSelection(document.getElementById("divisionDropdown"));
+        setInitialSelection(document.getElementById("departmentDropdown"));
+    });
+
+    function setInitialSelection(dropdown) {
+        const selectedOption = dropdown.querySelector("[selected]");
+        if (selectedOption) {
+            selectedOption.selected = true;
+        }
+    }
+
     function toggleEdit() {
-        // Hide display elements and show input fields
+        // Show editable fields and hide display fields
         document.getElementById("usernameDisplay").classList.add("d-none");
         document.getElementById("usernameInput").classList.remove("d-none");
 
@@ -79,16 +105,37 @@
         document.getElementById("departmentDisplay").classList.add("d-none");
         document.getElementById("departmentDropdown").classList.remove("d-none");
 
-        // Show Save and Cancel buttons, hide Edit button
         document.getElementById("editButton").classList.add("d-none");
         document.getElementById("saveButton").classList.remove("d-none");
         document.getElementById("cancelButton").classList.remove("d-none");
+
+        // Filter departments based on selected division
+        filterDepartments();
+    }
+
+    function filterDepartments() {
+        const selectedDivisionId = document.getElementById("divisionDropdown").value;
+        const departmentDropdown = document.getElementById("departmentDropdown");
+
+        // Show only departments that belong to the selected division
+        Array.from(departmentDropdown.options).forEach(option => {
+            const divisionId = option.getAttribute("data-division-id");
+            if (!divisionId || divisionId === selectedDivisionId || option.value === "") {
+                option.classList.remove("d-none");
+            } else {
+                option.classList.add("d-none");
+            }
+        });
+
+        // Reset department selection if the division changes
+        departmentDropdown.value = ""; // Reset department selection
     }
 
     function cancelEdit() {
-        // Reload the page to reset everything
         location.reload();
     }
 </script>
+
+
 
 

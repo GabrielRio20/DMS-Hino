@@ -1,0 +1,99 @@
+﻿/*body {
+    background-color: #f8f9fa;*/ /* Warna latar belakang yang lebih lembut */
+    /*font-family: 'Arial', sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}*/
+
+.dashboard-container {
+    margin: auto;
+    max-width: 800px; 
+}
+
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 30px; 
+}
+
+    .dashboard-header h1 {
+        color: #007bff;
+        font-size: 1.8em; 
+        margin: 0;
+        padding-bottom: 5px;
+    }
+
+    .dashboard-header p {
+        color: #6c757d;
+        font-size: 0.9em; 
+        margin-top: 5px;
+    }
+
+.card {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; 
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+
+.card-header {
+    background-color: #007bff;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 10px;
+    font-size: 1.1em; 
+}
+
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px; 
+    border-bottom: 1px solid #f1f1f1;
+    font-size: 0.8em; 
+}
+
+    .list-group-item:last-child {
+        border-bottom: none;
+    }
+
+.document-title {
+    font-weight: bold;
+    color: #007bff;
+    font-size: 0.9em; 
+}
+
+.department, .released-date {
+    font-size: 0.75em; /* Ukuran font lebih kecil */
+    color: #6c757d;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 20px; /* Jarak lebih kecil */
+    color: #6c757d;
+    font-size: 0.85em; /* Ukuran font lebih kecil */
+}
+
+.badge {
+    padding: 3px 6px; /* Padding badge lebih kecil */
+    border-radius: 12px;
+    font-size: 0.7em; /* Ukuran font lebih kecil */
+}
+
+.badge-pending {
+    background-color: #ffc107;
+    color: #fff;
+}
+
+.badge-released {
+    background-color: #28a745;
+    color: #fff;
+}

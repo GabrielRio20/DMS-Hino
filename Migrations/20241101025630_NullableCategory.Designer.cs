@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DMS_Hino.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241017062546_createdby_nullable")]
-    partial class createdby_nullable
+    [Migration("20241101025630_NullableCategory")]
+    partial class NullableCategory
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -34,21 +34,14 @@ namespace DMS_Hino.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ParentId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.HasIndex("ParentId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            Name = "Category1"
-                        },
-                        new
-                        {
-                            Id = "2",
-                            Name = "Category2"
-                        });
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("DMS_Hino.Models.Department", b =>
@@ -69,20 +62,6 @@ namespace DMS_Hino.Migrations
                     b.HasIndex("DivisionId");
 
                     b.ToTable("Departments");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            DivisionId = "1",
-                            Name = "Department1"
-                        },
-                        new
-                        {
-                            Id = "2",
-                            DivisionId = "2",
-                            Name = "Department2"
-                        });
                 });
 
             modelBuilder.Entity("DMS_Hino.Models.Division", b =>
@@ -97,18 +76,6 @@ namespace DMS_Hino.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Divisions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            Name = "Division1"
-                        },
-                        new
-                        {
-                            Id = "2",
-                            Name = "Division2"
-                        });
                 });
 
             modelBuilder.Entity("DMS_Hino.Models.Document", b =>
@@ -258,26 +225,15 @@ namespace DMS_Hino.Migrations
                     b.HasIndex("DivisionId");
 
                     b.ToTable("Users");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            DepartmentId = "1",
-                            DivisionId = "1",
-                            Password = "hashedpassword",
-                            Role = "Admin",
-                            Username = "creatorUser"
-                        },
-                        new
-                        {
-                            Id = "2",
-                            DepartmentId = "2",
-                            DivisionId = "2",
-                            Password = "hashedpassword",
-                            Role = "User",
-                            Username = "modifierUser"
-                        });
+            modelBuilder.Entity("DMS_Hino.Models.Category", b =>
+                {
+                    b.HasOne("DMS_Hino.Models.Category", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId");
+
+                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("DMS_Hino.Models.Department", b =>
@@ -375,6 +331,8 @@ namespace DMS_Hino.Migrations
 
             modelBuilder.Entity("DMS_Hino.Models.Category", b =>
                 {
+                    b.Navigation("Children");
+
                     b.Navigation("Documents");
                 });
 

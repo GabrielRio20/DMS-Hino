@@ -15,40 +15,29 @@ namespace DMS_Hino.Data
                 // Ensure the database is created
                 await context.Database.EnsureCreatedAsync();
 
-                // Check and seed Division
-                var division = context.Divisions.FirstOrDefault(d => d.Id == "division1");
-                if (division == null)
-                {
-                    division = new Division
-                    {
-                        Id = "division2",
-                        Name = "Admin Division"
-                    };
-                    context.Divisions.Add(division);
-                }
-
-                // Check and seed Department
-                var department = context.Departments.FirstOrDefault(d => d.Id == "department1");
-                if (department == null)
-                {
-                    department = new Department
-                    {
-                        Id = "department2",
-                        Name = "Admin Department",
-                        DivisionId = division.Id
-                    };
-                    context.Departments.Add(department);
-                }
-
                 if (!context.Users.Any(u => u.Username == "admin"))
                 {
+                    var adminDivision = await context.Divisions.FindAsync("AdminDivision");
+                    if (adminDivision == null)
+                    {
+                        adminDivision = new Division { Id = "AdminDivision", Name = "Admin Division" };
+                        context.Divisions.Add(adminDivision);
+                    }
+
+                    var adminDepartment = await context.Departments.FindAsync("AdminDepartment");
+                    if (adminDepartment == null)
+                    {
+                        adminDepartment = new Department { Id = "AdminDepartment", Name = "Admin Department", DivisionId = adminDivision.Id };
+                        context.Departments.Add(adminDepartment);
+                    }
+
                     var adminUser = new User
                     {
                         Id = Guid.NewGuid().ToString(),
                         Username = "admin",
                         Role = "Admin",
-                        DivisionId = division.Id,  
-                        DepartmentId = department.Id,  
+                        DivisionId = "AdminDivision",  
+                        DepartmentId = "AdminDepartment",  
                         Password = new PasswordHasher<User>().HashPassword(null, "admin") 
                     };
 

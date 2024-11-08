@@ -19,6 +19,11 @@ namespace DMS_Hino.Controllers
             _context = context;
         }
 
+        public IActionResult DashboardAdmin()
+        {
+            return View();
+        }
+
         public IActionResult AllUsersView()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get the current user's ID
@@ -176,34 +181,76 @@ namespace DMS_Hino.Controllers
             return RedirectToAction("AllDivisionsAndDepartments", "Admin");
         }
 
-        [HttpPost]
-        public IActionResult UpdateDivisionName(string id, string name)
+        public async Task<IActionResult> UpdateDivisionName(string id, string newName)
         {
-            var division = _context.Divisions.FirstOrDefault(d => d.Id == id);
-            if (division == null)
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(newName))
             {
-                return NotFound();
+                return BadRequest("ID atau nama baru tidak valid.");
             }
 
-            division.Name = name;
-            _context.SaveChanges();
+            var division = await _context.Divisions.FindAsync(id);
+            if (division == null)
+            {
+                return NotFound("Divisi tidak ditemukan.");
+            }
 
-            return Ok();
+            division.Name = newName;
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok(); // Status 200 jika berhasil
+            }
+            catch (DbUpdateException ex)
+            {
+                return StatusCode(500, $"Kesalahan server: {ex.Message}");
+            }
         }
 
         [HttpPost]
-        public IActionResult UpdateDepartmentName(string id, string name)
+        public async Task<IActionResult> UpdateDepartmentName(string id, string newName)
         {
-            var department = _context.Departments.FirstOrDefault(d => d.Id == id);
-            if (department == null)
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(newName))
             {
-                return NotFound();
+                return BadRequest("ID atau nama baru tidak valid.");
             }
 
-            department.Name = name;
+            var department = await _context.Departments.FindAsync(id);
+            if (department == null)
+            {
+                return NotFound("Departemen tidak ditemukan.");
+            }
+
+            department.Name = newName;
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok(); 
+            }
+            catch (DbUpdateException ex)
+            {
+                return StatusCode(500, $"Kesalahan server: {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        public IActionResult AddDepartmentLive(string divisionId, string departmentName)
+        {
+            if (string.IsNullOrEmpty(departmentName))
+            {
+                return Json(new { success = false, message = "Department name cannot be empty" });
+            }
+
+            var newDepartment = new Department
+            {
+                Id = Guid.NewGuid().ToString(), // Ensure a unique ID is set
+                DivisionId = divisionId,
+                Name = departmentName
+            };
+
+            _context.Departments.Add(newDepartment);
             _context.SaveChanges();
 
-            return Ok();
+            return Json(new { success = true, departmentId = newDepartment.Id, departmentName = newDepartment.Name });
         }
 
         [HttpGet]
@@ -238,30 +285,24 @@ namespace DMS_Hino.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveUser(UserViewModel model)
         {
-            // Retrieve the user to update
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == model.Id);
             if (user == null)
             {
-                return NotFound(); // Return 404 if user not found
+                return NotFound();
             }
 
-            // Update user properties with new values from the form
             user.Username = model.Username;
             user.Role = model.Role;
             user.DivisionId = model.DivisionId;
             user.DepartmentId = model.DepartmentId;
 
-            // Check if the password field is not empty (means user wants to change the password)
             if (!string.IsNullOrEmpty(model.Password))
             {
-                // Hash the new password before saving it using PasswordHasher
                 user.Password = new PasswordHasher<User>().HashPassword(user, model.Password);
             }
 
-            // Save changes to the database
             await _context.SaveChangesAsync();
 
-            // Redirect back to detail view after saving
             return RedirectToAction("UserDetail", new { id = model.Id });
         }
 
@@ -282,15 +323,14 @@ namespace DMS_Hino.Controllers
                 return RedirectToAction("AllUsersView");
             }
 
-            // Optional: Handle documents before deleting the user, for example, disassociating the user
             foreach (var document in user.CreatedDocuments)
             {
-                document.CreatedBy = null;  // Disassociate the creator
+                document.CreatedBy = null;  
             }
 
             foreach (var document in user.ModifiedDocuments)
             {
-                document.ModifiedBy = null;  // Disassociate the last modifier
+                document.ModifiedBy = null;  
             }
 
             try
